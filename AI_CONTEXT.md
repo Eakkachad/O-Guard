@@ -81,10 +81,27 @@ O-Guard is an **AI-Powered 2-sided marketplace platform** that bridges the gap b
 - **Phase 2:** Fine-tune AI models with real Thai labor data + Backend API + Scale to 1,000 users
 - **Current:** Prototyping interactive demo (React app in `/app`, `presentation.html`)
 
+## 📊 Business Research (Completed by Business Team)
+
+รายงานวิจัยเชิงธุรกิจที่ผ่านการค้นคว้าและอ้างอิงแหล่งข้อมูลจริงแล้ว:
+
+| ไฟล์ | เนื้อหาหลัก | สถานะ |
+|---|---|---|
+| `docs/business/01_core_problem_analysis.md` | วิเคราะห์ปัญหา Skill Mismatch + ว่างงาน 410K คน + ต้นทุนเศรษฐกิจ 3.3 ล้านล้านบาท | ✅ เสร็จ |
+| `docs/business/03_business_model_analysis.md` | Revenue Model 3 เสาหลัก (Placement Fee 10-15%, CSR/ESG Sponsorship, Government Grants) + Revenue Projection | ✅ เสร็จ |
+| `docs/business/business_impact_strategy.md` | กรอบกลยุทธ์ภาพรวม Business & Social Impact | ✅ เสร็จ |
+
+**Key Financial Numbers (สำหรับทุกทีมใช้อ้างอิง):**
+- MVP Cost: **~1M฿** (จาก Tech) → Seed Funding: **~1.4M฿**
+- Pilot Revenue (100 placements): **2.4-2.88M฿** → Break-even ใน Pilot Phase แรก
+- สิทธิประโยชน์ภาษี: ลดหย่อน **200-250%** สำหรับลูกค้า (พ.ร.บ. ฝีมือแรงงาน + depa STEM)
+- แหล่งทุน: NIA (1.5-5M), depa Digital Startup Fund, BOI Upskilling (5,000M)
+
 ## 📂 Project Structure
 
 - `/app` – React/Vite frontend application
 - `/docs/business/` – Business models, pitch decks, financial projections
+- `/docs/tech/` – Technical specifications, MVP cost estimates
 - `/docs/research/` – Market analysis, competitor research, labor statistics
 - `/docs/design/` – UX/UI wireframes, service blueprints
 - `/AI_CONTEXT.md` – This file (Single Source of Truth for AI)
@@ -92,4 +109,4 @@ O-Guard is an **AI-Powered 2-sided marketplace platform** that bridges the gap b
 
 ---
 
-_Last updated: 2026-03-07 by Tech Lead. If goals change, update this file, commit, and push._
+_Last updated: 2026-03-07 by Business Team (AI Sync). If goals change, update this file, commit, and push._
