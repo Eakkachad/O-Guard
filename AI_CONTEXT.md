@@ -64,10 +64,21 @@ O-Guard is an **AI-Powered 2-sided marketplace platform** that bridges the gap b
 3. **Commit Messages:** Prefix with `[AI Sync]` when updating context.
 4. **Follow Workflows:** Check `.agents/workflows/` for predefined AI workflows.
 
+## 🎯 Pilot Target (Decided with Business Team)
+
+- **Supply (ผู้เรียน):** เด็กจบใหม่ ปวส./ป.ตรี + ผู้ว่างงาน 20-30 ปี ใน EEC
+- **Demand (ตำแหน่งงาน):** Manufacturing & Logistics ใน EEC
+  1. Automation & Robotics Technician (ช่างเทคนิคระบบอัตโนมัติ/หุ่นยนต์)
+  2. Digital Warehouse Supervisor (หัวหน้างานคลังสินค้าดิจิทัล)
+  3. Smart Maintenance Technician (ช่างซ่อมบำรุงเชิงคาดการณ์)
+  4. Logistics Data Analyst (นักวิเคราะห์ข้อมูลโลจิสติกส์)
+- **Pilot Scale:** 100 placements, 5-10 partner companies
+- **MVP Budget:** ~1.4M฿ (6 months) — see `docs/tech/04_mvp_cost_estimate.md`
+
 ## 🚀 Current Roadmap & State
 
-- **Phase 1 (MVP):** Skill Assessment + Course Aggregation + Frontend Prototype
-- **Phase 2:** Fine-tune AI models with real Thai labor data + Backend API
+- **Phase 1 (MVP - 6 months):** Skill Assessment + Course Aggregation + Frontend Prototype + Pilot 100 users
+- **Phase 2:** Fine-tune AI models with real Thai labor data + Backend API + Scale to 1,000 users
 - **Current:** Prototyping interactive demo (React app in `/app`, `presentation.html`)
 
 ## 📂 Project Structure
