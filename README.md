@@ -72,6 +72,14 @@ The current repository contains the initial structure and front-end prototype of
 
 ---
 
+## 📊 Business & Research Contributors
+
+If you are joining the team as a Business Analyst, Researcher, or focusing on non-technical aspects (like business models, Pitch Decks, UX design), please see our dedicated **[Business & Research Guide](docs/BUSINESS_RESEARCH_GUIDE.md)**.
+
+This guide explains how to use the repository to store your research, keep your AI assistants synchronized with the project's core business value, and contribute your findings to the team without needing to write code.
+
+---
+
 ## 🤝 Project Alignment & Frameworks
 
 SkillBridge is critically aligned with modern socio-environmental frameworks:
