@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>O-guard App Demo</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Noto Sans Thai',sans-serif;background:#0f1729;display:flex;justify-content:center;align-items:center;min-height:100vh;color:#1e293b}
+
+/* Phone Frame */
+.phone{width:390px;height:844px;background:#f8fafc;border-radius:44px;overflow:hidden;position:relative;box-shadow:0 0 0 12px #1a1a2e,0 0 0 14px #333,0 40px 80px rgba(0,0,0,.5);display:flex;flex-direction:column}
+.notch{width:160px;height:34px;background:#1a1a2e;border-radius:0 0 20px 20px;position:absolute;top:0;left:50%;transform:translateX(-50%);z-index:200}
+.status-bar{height:50px;background:#fff;display:flex;align-items:flex-end;justify-content:space-between;padding:0 28px 6px;font-size:12px;font-weight:600;color:#1e293b;position:relative;z-index:100;flex-shrink:0}
+
+/* Screens */
+.screen{flex:1;overflow-y:auto;overflow-x:hidden;display:none;flex-direction:column;position:relative}
+.screen.active{display:flex}
+.screen::-webkit-scrollbar{display:none}
+
+/* Bottom Tab */
+.tab-bar{height:82px;background:#fff;border-top:1px solid #e2e8f0;display:flex;align-items:flex-start;padding-top:8px;flex-shrink:0;position:relative;z-index:100}
+.tab{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer;padding:4px 0;transition:.2s}
+.tab-icon{font-size:22px;line-height:1}
+.tab-label{font-size:10px;font-weight:500;color:#94a3b8}
+.tab.active .tab-label{color:#0d9488;font-weight:600}
+
+/* Common */
+.px{padding-left:20px;padding-right:20px}
+.section-title{font-size:15px;font-weight:700;color:#0f172a;margin:20px 20px 12px}
+.subtitle{font-size:12px;color:#64748b;margin:-8px 20px 12px}
+
+/* Screen: Home */
+.home-header{background:linear-gradient(135deg,#0d9488,#0891b2);padding:54px 20px 24px;color:#fff}
+.home-header h2{font-size:20px;font-weight:700}
+.home-header p{font-size:13px;opacity:.85;margin-top:2px}
+.search-box{background:rgba(255,255,255,.2);border-radius:12px;padding:10px 14px;margin-top:14px;display:flex;align-items:center;gap:8px;font-size:13px;color:rgba(255,255,255,.7)}
+
+.quick-actions{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:16px 20px}
+.qa-btn{display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 4px;background:#f1f5f9;border-radius:14px;cursor:pointer;transition:.2s}
+.qa-btn:hover{background:#e2e8f0}
+.qa-btn .ico{font-size:24px}
+.qa-btn span{font-size:10px;font-weight:500;color:#475569;text-align:center;line-height:1.3}
+
+.progress-card{margin:0 20px;background:linear-gradient(135deg,#f0fdfa,#ecfdf5);border:1px solid #99f6e4;border-radius:16px;padding:16px}
+.progress-card h4{font-size:13px;font-weight:600;color:#0f766e;margin-bottom:10px}
+.progress-bar-bg{height:8px;background:#d1fae5;border-radius:4px;overflow:hidden}
+.progress-bar-fill{height:100%;background:linear-gradient(90deg,#0d9488,#06b6d4);border-radius:4px;transition:width .8s}
+.progress-stats{display:flex;justify-content:space-between;margin-top:8px;font-size:11px;color:#64748b}
+
+.rec-card{background:#fff;border:1px solid #e2e8f0;border-radius:14px;padding:14px;margin:0 20px 10px;display:flex;gap:12px;cursor:pointer;transition:.2s}
+.rec-card:hover{border-color:#0d9488;box-shadow:0 2px 8px rgba(13,148,136,.1)}
+.rec-icon{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.rec-icon.blue{background:#dbeafe}
+.rec-icon.green{background:#d1fae5}
+.rec-icon.purple{background:#ede9fe}
+.rec-icon.orange{background:#ffedd5}
+.rec-info h4{font-size:13px;font-weight:600;color:#0f172a;margin-bottom:2px}
+.rec-info p{font-size:11px;color:#64748b;line-height:1.4}
+.rec-tag{display:inline-block;padding:2px 8px;border-radius:6px;font-size:10px;font-weight:500;margin-top:4px}
+.tag-free{background:#d1fae5;color:#065f46}
+.tag-cert{background:#dbeafe;color:#1e40af}
+.tag-loc{background:#fef3c7;color:#92400e}
+
+/* Screen: Learn */
+.learn-header{background:linear-gradient(135deg,#7c3aed,#6d28d9);padding:54px 20px 20px;color:#fff}
+.learn-header h2{font-size:18px;font-weight:700}
+.learn-header p{font-size:12px;opacity:.8;margin-top:4px}
+
+.path-card{margin:12px 20px;background:#fff;border:1px solid #e2e8f0;border-radius:16px;overflow:hidden}
+.path-header{padding:14px 16px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #f1f5f9}
+.path-header h4{font-size:14px;font-weight:600}
+.path-badge{padding:3px 10px;border-radius:8px;font-size:11px;font-weight:600}
+.badge-active{background:#d1fae5;color:#065f46}
+.badge-locked{background:#f1f5f9;color:#94a3b8}
+.path-step{padding:12px 16px;display:flex;align-items:center;gap:12px;border-bottom:1px solid #f8fafc}
+.step-dot{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0}
+.dot-done{background:#0d9488;color:#fff}
+.dot-current{background:#fff;border:2px solid #0d9488;color:#0d9488}
+.dot-locked{background:#f1f5f9;color:#cbd5e1}
+.step-info h5{font-size:12px;font-weight:600;color:#0f172a}
+.step-info p{font-size:10px;color:#94a3b8}
+.step-provider{margin-left:auto;font-size:10px;color:#64748b;text-align:right}
+
+/* Screen: Jobs */
+.jobs-header{background:linear-gradient(135deg,#0369a1,#0284c7);padding:54px 20px 20px;color:#fff}
+.jobs-header h2{font-size:18px;font-weight:700}
+
+.match-score{display:flex;align-items:center;gap:6px;margin-left:auto}
+.score-circle{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff}
+.score-high{background:#0d9488}
+.score-mid{background:#f59e0b}
+
+.job-card{margin:8px 20px;background:#fff;border:1px solid #e2e8f0;border-radius:14px;padding:14px;cursor:pointer;transition:.2s}
+.job-card:hover{border-color:#0284c7;box-shadow:0 2px 8px rgba(3,105,161,.1)}
+.job-top{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.company-logo{width:38px;height:38px;border-radius:10px;background:#f1f5f9;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.job-title h4{font-size:13px;font-weight:600;color:#0f172a}
+.job-title p{font-size:11px;color:#64748b}
+.job-tags{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px}
+.job-tag{padding:3px 8px;border-radius:6px;font-size:10px;font-weight:500;background:#f1f5f9;color:#475569}
+.job-salary{font-size:12px;font-weight:600;color:#0d9488;margin-top:8px}
+
+/* Screen: Community */
+.comm-header{background:linear-gradient(135deg,#ea580c,#f97316);padding:54px 20px 20px;color:#fff}
+.comm-header h2{font-size:18px;font-weight:700}
+
+.mentor-card{display:flex;align-items:center;gap:12px;padding:12px 20px;border-bottom:1px solid #f1f5f9}
+.mentor-avatar{width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.mentor-info h4{font-size:13px;font-weight:600;color:#0f172a}
+.mentor-info p{font-size:11px;color:#64748b}
+.mentor-btn{margin-left:auto;padding:6px 14px;border-radius:8px;border:1px solid #0d9488;color:#0d9488;font-size:11px;font-weight:600;background:#fff;cursor:pointer}
+
+.event-card{margin:8px 20px;background:#fff;border:1px solid #e2e8f0;border-radius:14px;overflow:hidden}
+.event-banner{height:80px;display:flex;align-items:center;justify-content:center;font-size:28px}
+.event-body{padding:12px}
+.event-body h4{font-size:13px;font-weight:600;color:#0f172a}
+.event-body p{font-size:11px;color:#64748b;margin-top:2px}
+.event-date{display:flex;align-items:center;gap:4px;font-size:11px;color:#0d9488;font-weight:500;margin-top:6px}
+
+/* Screen: Profile */
+.profile-header{background:linear-gradient(135deg,#0d9488,#14b8a6);padding:54px 20px 20px;color:#fff;text-align:center}
+.profile-avatar{width:72px;height:72px;border-radius:50%;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-size:32px;margin:0 auto 10px}
+.profile-header h2{font-size:18px;font-weight:700}
+.profile-header p{font-size:12px;opacity:.8}
+.profile-stats{display:flex;justify-content:space-around;margin-top:16px}
+.prof-stat{text-align:center}
+.prof-stat-num{font-size:20px;font-weight:700}
+.prof-stat-label{font-size:10px;opacity:.8}
+
+.skill-grid{display:flex;flex-wrap:wrap;gap:6px;padding:0 20px;margin-bottom:16px}
+.skill-chip{padding:6px 12px;border-radius:20px;font-size:11px;font-weight:500;background:#f1f5f9;color:#475569}
+.skill-chip.verified{background:#d1fae5;color:#065f46;border:1px solid #6ee7b7}
+
+.cert-item{display:flex;align-items:center;gap:10px;padding:10px 20px;border-bottom:1px solid #f1f5f9}
+.cert-icon{font-size:22px}
+.cert-info h4{font-size:12px;font-weight:600;color:#0f172a}
+.cert-info p{font-size:10px;color:#64748b}
+
+/* Skill Assessment Modal */
+.modal-overlay{position:absolute;inset:0;background:rgba(0,0,0,.4);z-index:300;display:none;justify-content:center;align-items:flex-end}
+.modal-overlay.show{display:flex}
+.modal{background:#fff;border-radius:24px 24px 0 0;width:100%;max-height:85%;overflow-y:auto;padding:20px 20px 40px}
+.modal-handle{width:40px;height:4px;background:#cbd5e1;border-radius:2px;margin:0 auto 16px}
+.modal h3{font-size:16px;font-weight:700;text-align:center;margin-bottom:16px}
+
+.assess-q{margin-bottom:16px}
+.assess-q label{display:block;font-size:13px;font-weight:600;color:#0f172a;margin-bottom:8px}
+.assess-q select,.assess-q input{width:100%;padding:10px 14px;border:1px solid #e2e8f0;border-radius:10px;font-size:13px;font-family:inherit;color:#0f172a;background:#f8fafc}
+.assess-q select:focus,.assess-q input:focus{outline:none;border-color:#0d9488}
+.slider-wrap{display:flex;align-items:center;gap:10px}
+.slider-wrap input[type=range]{flex:1;accent-color:#0d9488}
+.slider-val{font-size:14px;font-weight:600;color:#0d9488;min-width:30px;text-align:center}
+
+.chip-select{display:flex;flex-wrap:wrap;gap:6px}
+.chip-opt{padding:8px 14px;border-radius:20px;border:1px solid #e2e8f0;font-size:12px;cursor:pointer;transition:.2s;background:#fff;color:#475569}
+.chip-opt.selected{background:#0d9488;color:#fff;border-color:#0d9488}
+
+.btn-primary{width:100%;padding:14px;border:none;border-radius:12px;background:linear-gradient(135deg,#0d9488,#0891b2);color:#fff;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;margin-top:16px}
+
+/* Chatbot */
+.chat-fab{position:absolute;bottom:90px;right:16px;width:50px;height:50px;border-radius:50%;background:linear-gradient(135deg,#0d9488,#06b6d4);display:flex;align-items:center;justify-content:center;font-size:22px;box-shadow:0 4px 12px rgba(13,148,136,.3);cursor:pointer;z-index:150;border:none}
+.chat-panel{position:absolute;bottom:0;right:0;left:0;top:0;background:#fff;z-index:250;display:none;flex-direction:column}
+.chat-panel.show{display:flex}
+.chat-top{padding:50px 16px 12px;background:#0d9488;color:#fff;display:flex;align-items:center;gap:10px}
+.chat-close{width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.2);border:none;color:#fff;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.chat-top h4{font-size:15px;font-weight:600}
+.chat-msgs{flex:1;padding:16px;overflow-y:auto;display:flex;flex-direction:column;gap:10px}
+.chat-msg{max-width:80%;padding:10px 14px;border-radius:16px;font-size:13px;line-height:1.5}
+.msg-bot{background:#f1f5f9;color:#0f172a;align-self:flex-start;border-bottom-left-radius:4px}
+.msg-user{background:#0d9488;color:#fff;align-self:flex-end;border-bottom-right-radius:4px}
+.chat-input-bar{padding:10px 12px 30px;border-top:1px solid #e2e8f0;display:flex;gap:8px}
+.chat-input{flex:1;padding:10px 14px;border:1px solid #e2e8f0;border-radius:20px;font-size:13px;font-family:inherit;outline:none}
+.chat-send{width:38px;height:38px;border-radius:50%;background:#0d9488;border:none;color:#fff;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+
+/* Notification dot */
+.notif-dot{width:8px;height:8px;border-radius:50%;background:#ef4444;position:absolute;top:-2px;right:-2px}
+
+/* Animate */
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.fade-up{animation:fadeUp .4s ease forwards}
+
+/* Scrollbar hide */
+*::-webkit-scrollbar{display:none}
+</style>
+</head>
+<body>
+
+<div class="phone">
+  <div class="notch"></div>
+  <div class="status-bar">
+    <span>16:09</span>
+    <span>⚡ 85%</span>
+  </div>
+
+  <!-- ==================== HOME ==================== -->
+  <div class="screen active" id="screen-home">
+    <div class="home-header">
+      <h2>สวัสดี, สมชาย 👋</h2>
+      <p>มาพัฒนาตัวเองกันต่อเลย!</p>
+      <div class="search-box" onclick="openModal('assess')">
+        🔍 ค้นหาหลักสูตร, งาน, สกิล...
+      </div>
+    </div>
+
+    <div class="quick-actions">
+      <div class="qa-btn" onclick="openModal('assess')"><span class="ico">📋</span><span>ประเมิน<br>สกิล</span></div>
+      <div class="qa-btn" onclick="switchTab(1)"><span class="ico">🗺️</span><span>เส้นทาง<br>เรียนรู้</span></div>
+      <div class="qa-btn" onclick="switchTab(2)"><span class="ico">💼</span><span>งาน<br>แนะนำ</span></div>
+      <div class="qa-btn" onclick="switchTab(3)"><span class="ico">📍</span><span>ใกล้ฉัน</span></div>
+    </div>
+
+    <div class="progress-card fade-up">
+      <h4>🎯 เส้นทาง: ช่างเชื่อมอุตสาหกรรม</h4>
+      <div class="progress-bar-bg"><div class="progress-bar-fill" style="width:65%"></div></div>
+      <div class="progress-stats">
+        <span>เสร็จแล้ว 65%</span>
+        <span>เหลือ 2 หลักสูตร</span>
+      </div>
+    </div>
+
+    <div class="section-title">📚 แนะนำสำหรับคุณ</div>
+
+    <div class="rec-card fade-up">
+      <div class="rec-icon green">🔧</div>
+      <div class="rec-info">
+        <h4>ช่างเชื่อมไฟฟ้า ระดับ 1</h4>
+        <p>กรมพัฒนาฝีมือแรงงาน</p>
+        <span class="rec-tag tag-free">🆓 เรียนฟรี</span>
+        <span class="rec-tag tag-loc">📍 ระยอง</span>
+      </div>
+    </div>
+
+    <div class="rec-card fade-up">
+      <div class="rec-icon blue">💻</div>
+      <div class="rec-info">
+        <h4>ความปลอดภัยในโรงงาน (OHSA)</h4>
+        <p>Thai MOOC</p>
+        <span class="rec-tag tag-free">🆓 เรียนฟรี</span>
+        <span class="rec-tag tag-cert">📜 ได้ใบรับรอง</span>
+      </div>
+    </div>
+
+    <div class="rec-card fade-up">
+      <div class="rec-icon purple">🎨</div>
+      <div class="rec-info">
+        <h4>ทอผ้าไหมมัดหมี่ลายโบราณ</h4>
+        <p>ศูนย์ศิลปาชีพ บางไทร</p>
+        <span class="rec-tag tag-free">🆓 เรียนฟรี</span>
+        <span class="rec-tag tag-loc">📍 อยุธยา</span>
+      </div>
+    </div>
+
+    <div class="rec-card fade-up">
+      <div class="rec-icon orange">📊</div>
+      <div class="rec-info">
+        <h4>Microsoft Excel for Business</h4>
+        <p>Learning Center สมุทรปราการ</p>
+        <span class="rec-tag tag-free">🆓 เรียนฟรี</span>
+        <span class="rec-tag tag-cert">📜 ได้ใบรับรอง</span>
+      </div>
+    </div>
+
+    <div style="height:20px"></div>
+
+    <button class="chat-fab" onclick="toggleChat()">💬</button>
+  </div>
+
+  <!-- ==================== LEARN ==================== -->
+  <div class="screen" id="screen-learn">
+    <div class="learn-header">
+      <h2>🗺️ เส้นทางเรียนรู้ของคุณ</h2>
+      <p>เป้าหมาย: ช่างเชื่อมอุตสาหกรรม @ บ.สยามสตีล</p>
+    </div>
+
+    <div class="path-card fade-up">
+      <div class="path-header">
+        <h4>Phase 1: ทักษะพื้นฐาน</h4>
+        <span class="path-badge badge-active">✅ ผ่านแล้ว</span>
+      </div>
+      <div class="path-step">
+        <div class="step-dot dot-done">✓</div>
+        <div class="step-info"><h5>ความปลอดภัยในอุตสาหกรรม</h5><p>เสร็จ 15 มี.ค.</p></div>
+        <div class="step-provider">Thai MOOC<br>Online</div>
+      </div>
+      <div class="path-step">
+        <div class="step-dot dot-done">✓</div>
+        <div class="step-info"><h5>พื้นฐานงานโลหะ</h5><p>เสร็จ 2 เม.ย.</p></div>
+        <div class="step-provider">กรมพัฒนา<br>ฝีมือแรงงาน</div>
+      </div>
+    </div>
+
+    <div class="path-card fade-up">
+      <div class="path-header">
+        <h4>Phase 2: ทักษะเฉพาะทาง</h4>
+        <span class="path-badge badge-active">📖 กำลังเรียน</span>
+      </div>
+      <div class="path-step">
+        <div class="step-dot dot-done">✓</div>
+        <div class="step-info"><h5>เชื่อมไฟฟ้า SMAW ระดับ 1</h5><p>เสร็จ 20 พ.ค.</p></div>
+        <div class="step-provider">ศูนย์ฝึก<br>ระยอง</div>
+      </div>
+      <div class="path-step" style="background:#f0fdfa">
+        <div class="step-dot dot-current">4</div>
+        <div class="step-info"><h5>เชื่อม TIG สำหรับสแตนเลส</h5><p>⏳ กำลังเรียน – 70%</p></div>
+        <div class="step-provider">กรมพัฒนา<br>ฝีมือแรงงาน</div>
+      </div>
+      <div class="path-step">
+        <div class="step-dot dot-locked">5</div>
+        <div class="step-info"><h5>การอ่านแบบงานเชื่อม</h5><p>🔒 ยังไม่ปลด</p></div>
+        <div class="step-provider">Thai MOOC<br>Online</div>
+      </div>
+    </div>
+
+    <div class="path-card fade-up">
+      <div class="path-header">
+        <h4>Phase 3: สอบใบรับรอง</h4>
+        <span class="path-badge badge-locked">🔒 ยังไม่ถึง</span>
+      </div>
+      <div class="path-step">
+        <div class="step-dot dot-locked">6</div>
+        <div class="step-info"><h5>สอบมาตรฐานฝีมือแรงงาน</h5><p>🔒 ต้องผ่าน Phase 2 ก่อน</p></div>
+        <div class="step-provider">กรมพัฒนา<br>ฝีมือแรงงาน</div>
+      </div>
+    </div>
+
+    <div style="padding:16px 20px">
+      <div style="background:#fef3c7;border-radius:12px;padding:12px 14px;display:flex;align-items:center;gap:10px">
+        <span style="font-size:20px">🏭</span>
+        <div>
+          <div style="font-size:12px;font-weight:600;color:#92400e">งานรอคุณอยู่!</div>
+          <div style="font-size:11px;color:#a16207">บ.สยามสตีล – ช่างเชื่อม TIG เปิดรับ 3 ตำแหน่ง</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="height:20px"></div>
+    <button class="chat-fab" onclick="toggleChat()">💬</button>
+  </div>
+
+  <!-- ==================== JOBS ==================== -->
+  <div class="screen" id="screen-jobs">
+    <div class="jobs-header">
+      <h2>💼 งานที่เหมาะกับคุณ</h2>
+      <p style="font-size:12px;opacity:.8;margin-top:4px">จับคู่จาก Skills + ความสนใจ + ที่อยู่</p>
+    </div>
+
+    <div class="section-title">🎯 Match สูงสุด</div>
+
+    <div class="job-card fade-up">
+      <div class="job-top">
+        <div class="company-logo">🏭</div>
+        <div class="job-title">
+          <h4>ช่างเชื่อม TIG – Stainless</h4>
+          <p>บ.สยามสตีล จำกัด</p>
+        </div>
+        <div class="match-score"><div class="score-circle score-high">92%</div></div>
+      </div>
+      <div class="job-tags">
+        <span class="job-tag">📍 ระยอง</span>
+        <span class="job-tag">🏢 โรงงาน</span>
+        <span class="job-tag">🎓 ม.3 ขึ้นไป</span>
+        <span class="job-tag" style="background:#d1fae5;color:#065f46">✅ CSR Partner</span>
+      </div>
+      <div class="job-salary">💰 15,000 – 22,000 บาท/เดือน</div>
+    </div>
+
+    <div class="job-card fade-up">
+      <div class="job-top">
+        <div class="company-logo">⚡</div>
+        <div class="job-title">
+          <h4>ช่างเชื่อม MIG อัตโนมัติ</h4>
+          <p>บ.ไทยออโต้พาร์ท จำกัด</p>
+        </div>
+        <div class="match-score"><div class="score-circle score-high">85%</div></div>
+      </div>
+      <div class="job-tags">
+        <span class="job-tag">📍 ชลบุรี</span>
+        <span class="job-tag">🏢 ยานยนต์</span>
+        <span class="job-tag" style="background:#d1fae5;color:#065f46">✅ CSR Partner</span>
+      </div>
+      <div class="job-salary">💰 18,000 – 25,000 บาท/เดือน</div>
+    </div>
+
+    <div class="job-card fade-up">
+      <div class="job-top">
+        <div class="company-logo">🔩</div>
+        <div class="job-title">
+          <h4>ผู้ช่วยช่างเชื่อม</h4>
+          <p>บ.เอเชียนสตีลเวิร์ค</p>
+        </div>
+        <div class="match-score"><div class="score-circle score-mid">72%</div></div>
+      </div>
+      <div class="job-tags">
+        <span class="job-tag">📍 สมุทรปราการ</span>
+        <span class="job-tag">🏢 ก่อสร้าง</span>
+      </div>
+      <div class="job-salary">💰 12,000 – 16,000 บาท/เดือน</div>
+    </div>
+
+    <div class="section-title">📍 งานใกล้คุณ (ระยอง)</div>
+
+    <div class="job-card fade-up">
+      <div class="job-top">
+        <div class="company-logo">🏗️</div>
+        <div class="job-title">
+          <h4>หัวหน้างานเชื่อม</h4>
+          <p>บ.อมตะ เอ็นจิเนียริ่ง</p>
+        </div>
+        <div class="match-score"><div class="score-circle score-mid">68%</div></div>
+      </div>
+      <div class="job-tags">
+        <span class="job-tag">📍 ระยอง 5km</span>
+        <span class="job-tag">🎓 ปวส. ขึ้นไป</span>
+      </div>
+      <div class="job-salary">💰 25,000 – 35,000 บาท/เดือน</div>
+    </div>
+
+    <div style="height:20px"></div>
+    <button class="chat-fab" onclick="toggleChat()">💬</button>
+  </div>
+
+  <!-- ==================== COMMUNITY ==================== -->
+  <div class="screen" id="screen-community">
+    <div class="comm-header">
+      <h2>👥 Community</h2>
+      <p style="font-size:12px;opacity:.8;margin-top:4px">เชื่อมต่อ เรียนรู้ เติบโตไปด้วยกัน</p>
+    </div>
+
+    <div class="section-title">🧑‍🏫 Mentor แนะนำ</div>
+
+    <div class="mentor-card fade-up">
+      <div class="mentor-avatar" style="background:#d1fae5">👨‍🔧</div>
+      <div class="mentor-info">
+        <h4>ช่างประสิทธิ์ วงษ์ดี</h4>
+        <p>ช่างเชื่อม 15 ปี • บ.สยามสตีล</p>
+      </div>
+      <button class="mentor-btn">💬 คุย</button>
+    </div>
+    <div class="mentor-card fade-up">
+      <div class="mentor-avatar" style="background:#dbeafe">👩‍💼</div>
+      <div class="mentor-info">
+        <h4>พี่แอน HR Director</h4>
+        <p>แนะนำเตรียมตัวสัมภาษณ์</p>
+      </div>
+      <button class="mentor-btn">💬 คุย</button>
+    </div>
+
+    <div class="section-title">🏆 กลุ่มเรียนร่วม</div>
+
+    <div class="event-card fade-up">
+      <div class="event-banner" style="background:linear-gradient(135deg,#d1fae5,#a7f3d0)">🔧</div>
+      <div class="event-body">
+        <h4>กลุ่มเรียนรู้: เชื่อม TIG สแตนเลส</h4>
+        <p>สมาชิก 24 คน • กำลังเรียน Phase 2 เหมือนกัน</p>
+        <div class="event-date">👥 18 คนออนไลน์ตอนนี้</div>
+      </div>
+    </div>
+
+    <div class="section-title">📅 Events ที่น่าสนใจ</div>
+
+    <div class="event-card fade-up">
+      <div class="event-banner" style="background:linear-gradient(135deg,#dbeafe,#bfdbfe)">🎤</div>
+      <div class="event-body">
+        <h4>Workshop: เทคนิคสัมภาษณ์งานโรงงาน</h4>
+        <p>โดย HR Manager จากนิคมอมตะ</p>
+        <div class="event-date">📅 15 มี.ค. 2026 • 14:00 น. • Online</div>
+      </div>
+    </div>
+
+    <div class="event-card fade-up">
+      <div class="event-banner" style="background:linear-gradient(135deg,#fef3c7,#fde68a)">🏭</div>
+      <div class="event-body">
+        <h4>Career Fair: งานช่างอุตสาหกรรม</h4>
+        <p>พบ 20+ บริษัทพาร์ทเนอร์ O-guard</p>
+        <div class="event-date">📅 1 เม.ย. 2026 • ศูนย์ฝึก จ.ชลบุรี</div>
+      </div>
+    </div>
+
+    <div style="height:20px"></div>
+    <button class="chat-fab" onclick="toggleChat()">💬</button>
+  </div>
+
+  <!-- ==================== PROFILE ==================== -->
+  <div class="screen" id="screen-profile">
+    <div class="profile-header">
+      <div class="profile-avatar">👤</div>
+      <h2>สมชาย รักเรียน</h2>
+      <p>อายุ 23 ปี • ระยอง</p>
+      <div class="profile-stats">
+        <div class="prof-stat"><div class="prof-stat-num">4</div><div class="prof-stat-label">หลักสูตรจบ</div></div>
+        <div class="prof-stat"><div class="prof-stat-num">2</div><div class="prof-stat-label">ใบรับรอง</div></div>
+        <div class="prof-stat"><div class="prof-stat-num">65%</div><div class="prof-stat-label">ความก้าวหน้า</div></div>
+      </div>
+    </div>
+
+    <div class="section-title">💪 Skills ของคุณ</div>
+    <div class="skill-grid">
+      <span class="skill-chip verified">✅ ความปลอดภัยอุตสาหกรรม</span>
+      <span class="skill-chip verified">✅ เชื่อม SMAW</span>
+      <span class="skill-chip verified">✅ งานโลหะพื้นฐาน</span>
+      <span class="skill-chip verified">✅ เชื่อมไฟฟ้า</span>
+      <span class="skill-chip">📖 เชื่อม TIG (กำลังเรียน)</span>
+      <span class="skill-chip">🔒 อ่านแบบงานเชื่อม</span>
+    </div>
+
+    <div class="section-title">📜 ใบรับรอง</div>
+    <div class="cert-item fade-up">
+      <div class="cert-icon">🏅</div>
+      <div class="cert-info"><h4>มาตรฐานฝีมือ: เชื่อมไฟฟ้า ระดับ 1</h4><p>กรมพัฒนาฝีมือแรงงาน • 20 พ.ค. 2026</p></div>
+    </div>
+    <div class="cert-item fade-up">
+      <div class="cert-icon">📋</div>
+      <div class="cert-info"><h4>ความปลอดภัยในโรงงาน (OHSA)</h4><p>Thai MOOC • 15 มี.ค. 2026</p></div>
+    </div>
+    <div class="cert-item fade-up">
+      <div class="cert-icon">🎓</div>
+      <div class="cert-info"><h4>O-guard Skill Verified: ช่างเชื่อม</h4><p>O-guard Platform • ระดับ Intermediate</p></div>
+    </div>
+
+    <div class="section-title">📊 Skill Gap Analysis</div>
+    <div style="padding:0 20px 20px">
+      <div style="background:#f8fafc;border-radius:12px;padding:14px;border:1px solid #e2e8f0">
+        <div style="display:flex;justify-content:space-between;margin-bottom:6px">
+          <span style="font-size:12px;color:#0f172a;font-weight:500">ช่างเชื่อม TIG</span>
+          <span style="font-size:12px;color:#0d9488;font-weight:600">70%</span>
+        </div>
+        <div class="progress-bar-bg"><div class="progress-bar-fill" style="width:70%"></div></div>
+        <div style="display:flex;justify-content:space-between;margin-top:10px;margin-bottom:6px">
+          <span style="font-size:12px;color:#0f172a;font-weight:500">อ่านแบบงานเชื่อม</span>
+          <span style="font-size:12px;color:#f59e0b;font-weight:600">0%</span>
+        </div>
+        <div class="progress-bar-bg"><div class="progress-bar-fill" style="width:0%;background:#f59e0b"></div></div>
+        <div style="display:flex;justify-content:space-between;margin-top:10px;margin-bottom:6px">
+          <span style="font-size:12px;color:#0f172a;font-weight:500">ใบรับรองมาตรฐาน ระดับ 2</span>
+          <span style="font-size:12px;color:#f59e0b;font-weight:600">0%</span>
+        </div>
+        <div class="progress-bar-bg"><div class="progress-bar-fill" style="width:0%;background:#f59e0b"></div></div>
+      </div>
+    </div>
+
+    <div style="height:20px"></div>
+    <button class="chat-fab" onclick="toggleChat()">💬</button>
+  </div>
+
+  <!-- ==================== MODALS ==================== -->
+
+  <!-- Skill Assessment Modal -->
+  <div class="modal-overlay" id="modal-assess">
+    <div class="modal">
+      <div class="modal-handle"></div>
+      <h3>📋 ประเมินสกิลของคุณ</h3>
+
+      <div class="assess-q">
+        <label>คุณสนใจทำงานด้านไหน?</label>
+        <div class="chip-select" id="interest-chips">
+          <span class="chip-opt" onclick="toggleChip(this)">🔧 ช่างเชื่อม</span>
+          <span class="chip-opt" onclick="toggleChip(this)">💻 IT</span>
+          <span class="chip-opt" onclick="toggleChip(this)">🎨 งานศิลปะ</span>
+          <span class="chip-opt" onclick="toggleChip(this)">📊 บัญชี</span>
+          <span class="chip-opt" onclick="toggleChip(this)">🍳 ทำอาหาร</span>
+          <span class="chip-opt" onclick="toggleChip(this)">🌾 เกษตร</span>
+          <span class="chip-opt" onclick="toggleChip(this)">🚗 ยานยนต์</span>
+          <span class="chip-opt" onclick="toggleChip(this)">⚡ ไฟฟ้า</span>
+        </div>
+      </div>
+
+      <div class="assess-q">
+        <label>ระดับการศึกษาสูงสุด</label>
+        <select>
+          <option>เลือก...</option>
+          <option>มัธยมต้น (ม.3)</option>
+          <option>มัธยมปลาย (ม.6)</option>
+          <option>ปวช.</option>
+          <option>ปวส.</option>
+          <option>ปริญญาตรี</option>
+          <option>อื่นๆ</option>
+        </select>
+      </div>
+
+      <div class="assess-q">
+        <label>ประสบการณ์ทำงาน</label>
+        <div class="slider-wrap">
+          <span style="font-size:12px;color:#94a3b8">0 ปี</span>
+          <input type="range" min="0" max="20" value="2" oninput="this.nextElementSibling.textContent=this.value">
+          <span class="slider-val">2</span>
+          <span style="font-size:12px;color:#94a3b8">20 ปี</span>
+        </div>
+      </div>
+
+      <div class="assess-q">
+        <label>📍 จังหวัดที่อยู่</label>
+        <select>
+          <option>เลือกจังหวัด...</option>
+          <option selected>ระยอง</option>
+          <option>ชลบุรี</option>
+          <option>กรุงเทพฯ</option>
+          <option>เชียงใหม่</option>
+          <option>ขอนแก่น</option>
+        </select>
+      </div>
+
+      <div class="assess-q">
+        <label>ทักษะที่มีอยู่แล้ว</label>
+        <div class="chip-select">
+          <span class="chip-opt" onclick="toggleChip(this)">เชื่อมไฟฟ้า</span>
+          <span class="chip-opt" onclick="toggleChip(this)">งานโลหะ</span>
+          <span class="chip-opt" onclick="toggleChip(this)">คอมพิวเตอร์</span>
+          <span class="chip-opt" onclick="toggleChip(this)">ภาษาอังกฤษ</span>
+          <span class="chip-opt" onclick="toggleChip(this)">ขับรถ</span>
+          <span class="chip-opt" onclick="toggleChip(this)">ทอผ้า</span>
+        </div>
+      </div>
+
+      <button class="btn-primary" onclick="closeModal('assess')">🤖 AI วิเคราะห์และแนะนำ →</button>
+    </div>
+  </div>
+
+  <!-- Chat Panel -->
+  <div class="chat-panel" id="chat-panel">
+    <div class="chat-top">
+      <button class="chat-close" onclick="toggleChat()">✕</button>
+      <div>
+        <h4>🤖 O-guard AI Advisor</h4>
+        <div style="font-size:11px;opacity:.8">ถามอะไรก็ได้เกี่ยวกับการเรียนและอาชีพ</div>
+      </div>
+    </div>
+    <div class="chat-msgs" id="chat-msgs">
+      <div class="chat-msg msg-bot">สวัสดีครับ สมชาย! 👋 ผมคือ O-guard AI Advisor ช่วยแนะนำเรื่องการเรียนและอาชีพได้เลยครับ</div>
+      <div class="chat-msg msg-bot">ดูจาก Profile ของคุณ ตอนนี้กำลังเรียนเชื่อม TIG อยู่ถูกมั้ยครับ? มีอะไรอยากถามไหม? 😊</div>
+      <div class="chat-msg msg-user">อยากรู้ว่าถ้าผ่านหลักสูตรนี้แล้ว จะได้งานจริงไหม?</div>
+      <div class="chat-msg msg-bot">ได้จริงครับ! 🎯 ตอนนี้เรามี <b>บ.สยามสตีล</b> ลงนาม MOU รับช่างเชื่อม TIG ที่ผ่านเกณฑ์ 3 ตำแหน่ง เงินเดือนเริ่ม 15,000-22,000 บาท<br><br>คุณเหลืออีก 2 หลักสูตร ถ้าตั้งใจเรียนน่าจะเสร็จใน 1.5 เดือนครับ 💪</div>
+      <div class="chat-msg msg-user">มีที่ฝึกงานใกล้บ้านไหม? อยู่ระยอง</div>
+      <div class="chat-msg msg-bot">มีครับ! ศูนย์ฝึกที่ใกล้คุณ:<br>📍 <b>ศูนย์พัฒนาฝีมือแรงงาน จ.ระยอง</b> - 8km<br>📍 <b>ศูนย์ฝึกอมตะ นครนายก</b> - 25km<br><br>ทั้งสองที่เปิดฝึกฟรีครับ อยากให้ช่วยลงทะเบียนไหม?</div>
+    </div>
+    <div class="chat-input-bar">
+      <input class="chat-input" placeholder="พิมพ์ข้อความ..." id="chat-input" onkeydown="if(event.key==='Enter')sendChat()">
+      <button class="chat-send" onclick="sendChat()">➤</button>
+    </div>
+  </div>
+
+  <!-- Tab Bar -->
+  <div class="tab-bar">
+    <div class="tab active" onclick="switchTab(0)">
+      <span class="tab-icon">🏠</span>
+      <span class="tab-label">หน้าหลัก</span>
+    </div>
+    <div class="tab" onclick="switchTab(1)">
+      <span class="tab-icon">📚</span>
+      <span class="tab-label">เส้นทาง</span>
+    </div>
+    <div class="tab" onclick="switchTab(2)" style="position:relative">
+      <span class="tab-icon">💼</span>
+      <span class="tab-label">งาน</span>
+      <span class="notif-dot"></span>
+    </div>
+    <div class="tab" onclick="switchTab(3)">
+      <span class="tab-icon">👥</span>
+      <span class="tab-label">ชุมชน</span>
+    </div>
+    <div class="tab" onclick="switchTab(4)">
+      <span class="tab-icon">👤</span>
+      <span class="tab-label">โปรไฟล์</span>
+    </div>
+  </div>
+</div>
+
+<script>
+const screens=['screen-home','screen-learn','screen-jobs','screen-community','screen-profile'];
+const tabs=document.querySelectorAll('.tab');
+
+function switchTab(i){
+  screens.forEach(s=>document.getElementById(s).classList.remove('active'));
+  tabs.forEach(t=>t.classList.remove('active'));
+  document.getElementById(screens[i]).classList.add('active');
+  tabs[i].classList.add('active');
+  // scroll to top
+  document.getElementById(screens[i]).scrollTop=0;
+}
+
+function openModal(id){
+  document.getElementById('modal-'+id).classList.add('show');
+}
+function closeModal(id){
+  document.getElementById('modal-'+id).classList.remove('show');
+}
+
+function toggleChip(el){
+  el.classList.toggle('selected');
+}
+
+function toggleChat(){
+  document.getElementById('chat-panel').classList.toggle('show');
+}
+
+function sendChat(){
+  const input=document.getElementById('chat-input');
+  const msg=input.value.trim();
+  if(!msg)return;
+  const msgs=document.getElementById('chat-msgs');
+  msgs.innerHTML+=`<div class="chat-msg msg-user">${msg}</div>`;
+  input.value='';
+  setTimeout(()=>{
+    const replies=[
+      'ข้อมูลที่คุณถามน่าสนใจมากครับ! ผมช่วยหาข้อมูลเพิ่มเติมให้ได้ 🔍',
+      'หลักสูตรนี้เรียนฟรีครับ อยากให้ช่วยลงทะเบียนไหม? 📝',
+      'ตำแหน่งงานนี้ Match กับ Skill ของคุณ 85% ครับ! ลองดูรายละเอียดไหม? 💼',
+      'แนะนำให้เรียน "เชื่อม TIG สแตนเลส" ให้จบก่อนครับ จะเพิ่ม Match Score ได้ถึง 92%! 🎯',
+    ];
+    const reply=replies[Math.floor(Math.random()*replies.length)];
+    msgs.innerHTML+=`<div class="chat-msg msg-bot">${reply}</div>`;
+    msgs.scrollTop=msgs.scrollHeight;
+  },800);
+  msgs.scrollTop=msgs.scrollHeight;
+}
+
+// Click outside modal to close
+document.querySelectorAll('.modal-overlay').forEach(m=>{
+  m.addEventListener('click',e=>{
+    if(e.target===m)m.classList.remove('show');
+  });
+});
+</script>
+</body>
+</html>

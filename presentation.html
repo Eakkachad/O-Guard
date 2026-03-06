@@ -1,0 +1,1187 @@
+<!doctype html>
+<html lang="th">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>O-guard – ผู้พิทักษ์โอกาสแห่งการเรียนรู้และอาชีพ</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@300;400;600;700;900&family=Inter:wght@300;400;600;700;900&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      :root {
+        --navy: #0a0e27;
+        --deep: #111640;
+        --teal: #00d4aa;
+        --cyan: #00b8d4;
+        --purple: #7c3aed;
+        --pink: #f472b6;
+        --gold: #fbbf24;
+        --text: #e2e8f0;
+        --muted: #94a3b8;
+      }
+      body {
+        font-family: "Noto Sans Thai", "Inter", sans-serif;
+        background: var(--navy);
+        color: var(--text);
+        overflow: hidden;
+        height: 100vh;
+        width: 100vw;
+      }
+      .deck {
+        position: relative;
+        width: 100%;
+        height: 100%;
+      }
+      .slide {
+        position: absolute;
+        inset: 0;
+        display: none;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 60px 80px;
+        opacity: 0;
+        pointer-events: none;
+        overflow: hidden;
+      }
+      .slide.active {
+        display: flex;
+        opacity: 1;
+        pointer-events: auto;
+      }
+
+      /* Backgrounds */
+      .slide::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        z-index: 0;
+      }
+      .slide > * {
+        position: relative;
+        z-index: 1;
+      }
+      .bg-gradient::before {
+        background:
+          radial-gradient(
+            ellipse at 20% 50%,
+            rgba(124, 58, 237, 0.15),
+            transparent 60%
+          ),
+          radial-gradient(
+            ellipse at 80% 20%,
+            rgba(0, 212, 170, 0.1),
+            transparent 50%
+          ),
+          var(--navy);
+      }
+      .bg-dark::before {
+        background: linear-gradient(135deg, var(--navy), var(--deep));
+      }
+      .bg-teal::before {
+        background:
+          radial-gradient(
+            ellipse at 60% 40%,
+            rgba(0, 212, 170, 0.12),
+            transparent 60%
+          ),
+          var(--navy);
+      }
+      .bg-purple::before {
+        background:
+          radial-gradient(
+            ellipse at 30% 60%,
+            rgba(124, 58, 237, 0.15),
+            transparent 50%
+          ),
+          var(--navy);
+      }
+
+      /* Typography */
+      .slide-num {
+        position: absolute;
+        top: 30px;
+        right: 40px;
+        font-size: 14px;
+        color: var(--muted);
+        font-weight: 600;
+        letter-spacing: 2px;
+      }
+      h1 {
+        font-size: clamp(2.5rem, 5vw, 4rem);
+        font-weight: 900;
+        line-height: 1.2;
+        margin-bottom: 20px;
+      }
+      h2 {
+        font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+        font-weight: 700;
+        margin-bottom: 16px;
+      }
+      h3 {
+        font-size: clamp(1.2rem, 2vw, 1.6rem);
+        font-weight: 600;
+        color: var(--teal);
+        margin-bottom: 12px;
+      }
+      p,
+      .desc {
+        font-size: clamp(0.95rem, 1.5vw, 1.15rem);
+        color: var(--muted);
+        line-height: 1.7;
+        max-width: 800px;
+      }
+      .highlight {
+        color: var(--teal);
+      }
+      .highlight-purple {
+        color: var(--purple);
+      }
+      .highlight-gold {
+        color: var(--gold);
+      }
+      .tagline {
+        font-size: clamp(1.1rem, 2vw, 1.5rem);
+        color: var(--cyan);
+        font-weight: 300;
+        letter-spacing: 1px;
+        margin-top: 8px;
+      }
+
+      /* Layout helpers */
+      .two-col {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 50px;
+        width: 100%;
+        max-width: 1100px;
+        align-items: center;
+      }
+      .three-col {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 30px;
+        width: 100%;
+        max-width: 1100px;
+      }
+      .four-col {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 20px;
+        width: 100%;
+        max-width: 1100px;
+      }
+      .center {
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      /* Cards */
+      .card {
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 16px;
+        padding: 28px 24px;
+        transition:
+          transform 0.3s,
+          border-color 0.3s;
+      }
+      .card:hover {
+        transform: translateY(-4px);
+        border-color: var(--teal);
+      }
+      .card h3 {
+        margin-bottom: 10px;
+        font-size: 1.1rem;
+      }
+      .card p {
+        font-size: 0.9rem;
+        color: var(--muted);
+        line-height: 1.6;
+      }
+      .card-icon {
+        font-size: 2.2rem;
+        margin-bottom: 14px;
+      }
+
+      /* Stats */
+      .stat {
+        text-align: center;
+        padding: 20px;
+      }
+      .stat-num {
+        font-size: clamp(2rem, 4vw, 3rem);
+        font-weight: 900;
+        background: linear-gradient(135deg, var(--teal), var(--cyan));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+      .stat-label {
+        font-size: 0.85rem;
+        color: var(--muted);
+        margin-top: 4px;
+      }
+
+      /* Flow/Steps */
+      .step {
+        display: flex;
+        align-items: flex-start;
+        gap: 20px;
+        margin-bottom: 24px;
+      }
+      .step-num {
+        width: 44px;
+        height: 44px;
+        min-width: 44px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--teal), var(--cyan));
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        color: var(--navy);
+        font-size: 1.1rem;
+      }
+      .step-content h3 {
+        color: var(--text);
+        font-size: 1.05rem;
+        margin-bottom: 4px;
+      }
+      .step-content p {
+        font-size: 0.9rem;
+      }
+
+      /* Table */
+      .simple-table {
+        width: 100%;
+        max-width: 900px;
+        border-collapse: collapse;
+        margin-top: 20px;
+      }
+      .simple-table th {
+        text-align: left;
+        padding: 12px 16px;
+        border-bottom: 2px solid var(--teal);
+        color: var(--teal);
+        font-size: 0.9rem;
+        font-weight: 600;
+      }
+      .simple-table td {
+        padding: 12px 16px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        font-size: 0.9rem;
+        color: var(--muted);
+      }
+      .simple-table tr:hover td {
+        color: var(--text);
+      }
+
+      /* Progress bar */
+      .progress-track {
+        display: flex;
+        gap: 4px;
+        width: 100%;
+        max-width: 900px;
+        margin: 30px 0;
+      }
+      .progress-phase {
+        flex: 1;
+        text-align: center;
+        padding: 16px 8px;
+        border-radius: 12px;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        transition: 0.3s;
+      }
+      .progress-phase.active {
+        background: linear-gradient(
+          135deg,
+          rgba(0, 212, 170, 0.15),
+          rgba(0, 184, 212, 0.1)
+        );
+        border-color: var(--teal);
+      }
+      .progress-phase h4 {
+        font-size: 0.85rem;
+        color: var(--teal);
+        margin-bottom: 4px;
+      }
+      .progress-phase p {
+        font-size: 0.75rem;
+        color: var(--muted);
+      }
+
+      /* Nav */
+      .nav {
+        position: fixed;
+        bottom: 30px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        gap: 8px;
+        z-index: 100;
+        background: rgba(10, 14, 39, 0.8);
+        backdrop-filter: blur(20px);
+        padding: 10px 20px;
+        border-radius: 50px;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+      }
+      .nav-dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.2);
+        cursor: pointer;
+        transition: 0.3s;
+      }
+      .nav-dot.active {
+        background: var(--teal);
+        box-shadow: 0 0 10px var(--teal);
+      }
+      .nav-arrows {
+        position: fixed;
+        bottom: 30px;
+        right: 40px;
+        display: flex;
+        gap: 8px;
+        z-index: 100;
+      }
+      .nav-btn {
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        color: var(--text);
+        font-size: 1.2rem;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: 0.3s;
+      }
+      .nav-btn:hover {
+        background: var(--teal);
+        color: var(--navy);
+        border-color: var(--teal);
+      }
+
+      /* Logo */
+      .logo-img {
+        width: 160px;
+        height: 160px;
+        object-fit: contain;
+        margin-bottom: 20px;
+        filter: drop-shadow(0 0 30px rgba(0, 212, 170, 0.3));
+      }
+      .slide-img {
+        max-width: 420px;
+        width: 100%;
+        border-radius: 16px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+      }
+
+      /* Badge */
+      .badge {
+        display: inline-block;
+        padding: 6px 16px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        margin: 4px;
+      }
+      .badge-teal {
+        background: rgba(0, 212, 170, 0.15);
+        color: var(--teal);
+        border: 1px solid rgba(0, 212, 170, 0.3);
+      }
+      .badge-purple {
+        background: rgba(124, 58, 237, 0.15);
+        color: #a78bfa;
+        border: 1px solid rgba(124, 58, 237, 0.3);
+      }
+      .badge-gold {
+        background: rgba(251, 191, 36, 0.15);
+        color: var(--gold);
+        border: 1px solid rgba(251, 191, 36, 0.3);
+      }
+
+      /* Animated elements */
+      @keyframes float {
+        0%,
+        100% {
+          transform: translateY(0);
+        }
+        50% {
+          transform: translateY(-10px);
+        }
+      }
+      .float {
+        animation: float 3s ease-in-out infinite;
+      }
+      @keyframes pulse-glow {
+        0%,
+        100% {
+          box-shadow: 0 0 20px rgba(0, 212, 170, 0.2);
+        }
+        50% {
+          box-shadow: 0 0 40px rgba(0, 212, 170, 0.4);
+        }
+      }
+      .glow {
+        animation: pulse-glow 2s ease-in-out infinite;
+      }
+
+      /* Ecosystem diagram */
+      .eco-diagram {
+        display: grid;
+        grid-template-areas: "user . company" ". platform ." "community . provider";
+        gap: 20px;
+        width: 100%;
+        max-width: 800px;
+        margin: 20px auto;
+      }
+      .eco-node {
+        padding: 20px;
+        border-radius: 16px;
+        text-align: center;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+      .eco-node.platform {
+        grid-area: platform;
+        background: linear-gradient(
+          135deg,
+          rgba(0, 212, 170, 0.1),
+          rgba(124, 58, 237, 0.1)
+        );
+        border-color: var(--teal);
+      }
+      .eco-node.user {
+        grid-area: user;
+      }
+      .eco-node.company {
+        grid-area: company;
+      }
+      .eco-node.community {
+        grid-area: community;
+      }
+      .eco-node.provider {
+        grid-area: provider;
+      }
+      .eco-node h4 {
+        font-size: 1rem;
+        margin-top: 8px;
+      }
+      .eco-icon {
+        font-size: 2rem;
+      }
+
+      @media (max-width: 768px) {
+        .slide {
+          padding: 30px 24px;
+        }
+        .two-col,
+        .three-col,
+        .four-col {
+          grid-template-columns: 1fr;
+          gap: 16px;
+        }
+        .eco-diagram {
+          grid-template-areas: "platform" "user" "company" "provider" "community";
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="deck" id="deck">
+      <!-- SLIDE 1: Cover -->
+      <div class="slide bg-gradient active" id="s0">
+        <span class="slide-num">01 / 15</span>
+        <div class="center">
+          <div class="float">
+            <img
+              src="oguard_logo_1772784850440.png"
+              alt="O-guard Logo"
+              class="logo-img"
+              onerror="this.style.display = 'none'"
+            />
+          </div>
+          <h1>O-guard</h1>
+          <p class="tagline">ผู้พิทักษ์โอกาสแห่งการเรียนรู้และอาชีพ</p>
+          <p style="margin-top: 24px; font-size: 0.95rem">
+            <span class="badge badge-teal">Education Tech</span>
+            <span class="badge badge-purple">AI-Powered</span>
+            <span class="badge badge-gold">Social Impact</span>
+          </p>
+          <p style="margin-top: 40px; color: var(--muted); font-size: 0.85rem">
+            Hackathon 2026 | ธีม: Society & Environment × Creativity × Urban
+            Living
+          </p>
+        </div>
+      </div>
+
+      <!-- SLIDE 2: แรงบันดาลใจ -->
+      <div class="slide bg-purple" id="s1">
+        <span class="slide-num">02 / 15</span>
+        <div class="center">
+          <h3>แรงบันดาลใจ</h3>
+          <h2>
+            น้อมนำพระราชปณิธาน<br /><span class="highlight"
+              >"พัฒนาคน ควบคู่การอนุรักษ์"</span
+            >
+          </h2>
+          <p style="margin: 20px 0">
+            สมเด็จพระนางเจ้าสิริกิติ์ พระบรมราชินีนาถ พระบรมราชชนนีพันปีหลวง<br />ทรงมีพระราชกรณียกิจในการสร้างอาชีพ
+            สร้างโอกาส และพัฒนาศักยภาพของคนไทยอย่างยั่งยืน
+          </p>
+          <div class="three-col" style="margin-top: 30px">
+            <div class="card center">
+              <div class="card-icon">🎨</div>
+              <h3>ศูนย์ศิลปาชีพ</h3>
+              <p>สร้างอาชีพจากทักษะภูมิปัญญา ให้ราษฎรพึ่งพาตนเองได้</p>
+            </div>
+            <div class="card center">
+              <div class="card-icon">🌾</div>
+              <h3>โครงการฟาร์มตัวอย่าง</h3>
+              <p>ฝึกอาชีพเกษตรกรรม สร้างรายได้อย่างยั่งยืน</p>
+            </div>
+            <div class="card center">
+              <div class="card-icon">🏛️</div>
+              <h3>สถาบันสิริกิติ์</h3>
+              <p>อนุรักษ์ผ้าไทย สืบสานภูมิปัญญาสู่เศรษฐกิจสร้างสรรค์</p>
+            </div>
+          </div>
+          <p style="margin-top: 24px; color: var(--teal); font-weight: 600">
+            O-guard สืบสานแนวทาง: เปิดโอกาสให้ทุกคนเข้าถึงการเรียนรู้ →
+            สู่อาชีพที่มั่นคง
+          </p>
+        </div>
+      </div>
+
+      <!-- SLIDE 3: Problem -->
+      <div class="slide bg-dark" id="s2">
+        <span class="slide-num">03 / 15</span>
+        <div class="center">
+          <h3>ปัญหาที่ต้องแก้</h3>
+          <h2>
+            Skill Mismatch – <span class="highlight">คนมี แต่ไม่ตรงงาน</span>
+          </h2>
+          <div class="two-col" style="margin-top: 30px">
+            <div>
+              <div
+                class="card"
+                style="margin-bottom: 16px; border-left: 3px solid #ef4444"
+              >
+                <h3 style="color: #ef4444">😰 ปัญหาฝั่ง User</h3>
+                <p>
+                  • ไม่รู้ต้องเรียนอะไรเพื่อได้งานที่อยากทำ<br />•
+                  เข้าไม่ถึงแหล่งเรียนรู้คุณภาพ / เสียค่าใช้จ่ายสูง<br />•
+                  เรียนจบแล้วไม่มีทางพิสูจน์ตัวเอง<br />• ไม่รู้ว่า Skill
+                  ตัวเองอยู่ตรงไหน
+                </p>
+              </div>
+            </div>
+            <div>
+              <div class="card" style="border-left: 3px solid var(--gold)">
+                <h3 style="color: var(--gold)">🏭 ปัญหาฝั่ง Company</h3>
+                <p>
+                  • หาพนักงานที่มี Skill ตรงสายยาก<br />•
+                  ต้นทุนฝึกอบรมพนักงานใหม่สูง<br />• อยากทำ CSR
+                  ด้านการศึกษาแต่ไม่รู้ช่องทาง<br />• อัตรา Turnover สูงเพราะ
+                  Mismatch
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 4: ขนาดปัญหา Stats -->
+      <div class="slide bg-teal" id="s3">
+        <span class="slide-num">04 / 15</span>
+        <div class="center">
+          <h3>ขนาดของโอกาส</h3>
+          <h2>ตลาดแรงงานไทย & EdTech</h2>
+          <div class="four-col" style="margin-top: 40px">
+            <div class="card center">
+              <div class="stat-num">39M</div>
+              <div class="stat-label">แรงงานไทยทั้งหมด</div>
+            </div>
+            <div class="card center">
+              <div class="stat-num">70K+</div>
+              <div class="stat-label">โรงงานอุตสาหกรรม</div>
+            </div>
+            <div class="card center">
+              <div class="stat-num">15-20%</div>
+              <div class="stat-label">การเติบโต EdTech/ปี</div>
+            </div>
+            <div class="card center">
+              <div class="stat-num">48%</div>
+              <div class="stat-label">แรงงาน Skill Mismatch</div>
+            </div>
+          </div>
+          <p style="margin-top: 30px">
+            กลุ่มเป้าหมาย: คนไทย
+            <span class="highlight">วัยรุ่นปลาย – วัยกลางคนต้น</span>
+            ที่ต้องการเรียนรู้สกิลใหม่พร้อมโอกาสในการทำงาน
+          </p>
+        </div>
+      </div>
+
+      <!-- SLIDE 5: Solution Overview -->
+      <div class="slide bg-gradient" id="s4">
+        <span class="slide-num">05 / 15</span>
+        <div class="center">
+          <h3>Solution</h3>
+          <h2>O-guard คืออะไร?</h2>
+          <p style="margin-bottom: 30px; font-size: 1.1rem">
+            <span class="highlight">ตัวกลางอัจฉริยะ</span> เชื่อมโยง 4 ฝ่าย
+            เพื่อให้ "คนได้งาน งานได้คน"
+          </p>
+          <div class="eco-diagram">
+            <div class="eco-node user card">
+              <div class="eco-icon">👤</div>
+              <h4>User</h4>
+              <p style="font-size: 0.8rem">ผู้แสวงหาความรู้<br />และโอกาสงาน</p>
+            </div>
+            <div class="eco-node platform card glow">
+              <div class="eco-icon">🛡️</div>
+              <h4 style="color: var(--teal)">O-guard Platform</h4>
+              <p style="font-size: 0.8rem">
+                AI ประสาน จับคู่<br />ติดตาม การันตี
+              </p>
+            </div>
+            <div class="eco-node company card">
+              <div class="eco-icon">🏢</div>
+              <h4>Company</h4>
+              <p style="font-size: 0.8rem">ต้องการพนักงาน<br />ตรงสาย + CSR</p>
+            </div>
+            <div class="eco-node community card">
+              <div class="eco-icon">👥</div>
+              <h4>Community</h4>
+              <p style="font-size: 0.8rem">Mentor, Forum<br />Study Group</p>
+            </div>
+            <div class="eco-node provider card">
+              <div class="eco-icon">📚</div>
+              <h4>Learning Provider</h4>
+              <p style="font-size: 0.8rem">
+                แหล่งเรียนฟรี/ต้นทุนต่ำ<br />ของรัฐเป็นหลัก
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 6: How It Works -->
+      <div class="slide bg-dark" id="s5">
+        <span class="slide-num">06 / 15</span>
+        <div class="two-col">
+          <div>
+            <h3>How It Works</h3>
+            <h2>เส้นทางของ User</h2>
+            <div style="margin-top: 24px">
+              <div class="step">
+                <div class="step-num">1</div>
+                <div class="step-content">
+                  <h3>ลงทะเบียน & Assessment</h3>
+                  <p>บอกความสามารถ ความสนใจ งานที่อยากทำ</p>
+                </div>
+              </div>
+              <div class="step">
+                <div class="step-num">2</div>
+                <div class="step-content">
+                  <h3>AI วิเคราะห์ Skill Gap</h3>
+                  <p>เปรียบเทียบกับ Job Requirements จากบริษัทจริง</p>
+                </div>
+              </div>
+              <div class="step">
+                <div class="step-num">3</div>
+                <div class="step-content">
+                  <h3>สร้าง Learning Path</h3>
+                  <p>แนะนำหลักสูตรฟรี/ราคาถูก ใกล้บ้าน ตรงสาย</p>
+                </div>
+              </div>
+              <div class="step">
+                <div class="step-num">4</div>
+                <div class="step-content">
+                  <h3>เรียน + ติดตาม + Community</h3>
+                  <p>Dashboard, Mentor, Chatbot ช่วยเหลือตลอด</p>
+                </div>
+              </div>
+              <div class="step">
+                <div class="step-num">5</div>
+                <div class="step-content">
+                  <h3>ผ่านเกณฑ์ → ได้งาน!</h3>
+                  <p>เสนองาน หรือเก็บเป็นโปรไฟล์สำหรับอนาคต</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="center">
+            <img
+              src="skill_gap_visual_1772784867010.png"
+              alt="Skill Gap Analysis"
+              class="slide-img"
+              onerror="this.style.display = 'none'"
+            />
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 7: AI Technology -->
+      <div class="slide bg-purple" id="s6">
+        <span class="slide-num">07 / 15</span>
+        <div class="center">
+          <h3>เทคโนโลยี & นวัตกรรม</h3>
+          <h2>AI Engine ภายใน O-guard</h2>
+          <div class="three-col" style="margin-top: 30px">
+            <div class="card center">
+              <div class="card-icon">🧠</div>
+              <h3>Skill Gap Analyzer</h3>
+              <p>
+                NLP วิเคราะห์ Job Description → สกัด Skills ที่ต้องการ →
+                เปรียบเทียบกับ User Profile
+              </p>
+            </div>
+            <div class="card center">
+              <div class="card-icon">🔄</div>
+              <h3>Adaptive Learning</h3>
+              <p>
+                ปรับเส้นทางเรียนรู้แบบ Real-time
+                ตามความก้าวหน้าและพฤติกรรมผู้เรียน
+              </p>
+            </div>
+            <div class="card center">
+              <div class="card-icon">💡</div>
+              <h3>Recommendation</h3>
+              <p>
+                แนะนำหลักสูตร + งาน ทั้ง Online/Offline ใกล้บ้าน ด้วย
+                Collaborative Filtering
+              </p>
+            </div>
+          </div>
+          <div class="three-col" style="margin-top: 16px">
+            <div class="card center">
+              <div class="card-icon">💬</div>
+              <h3>Chatbot RAG</h3>
+              <p>
+                ตอบคำถาม ให้คำแนะนำ Personalized ด้วย Retrieval-Augmented
+                Generation
+              </p>
+            </div>
+            <div class="card center">
+              <div class="card-icon">📊</div>
+              <h3>User Data Embedded</h3>
+              <p>
+                เก็บ Vector ของ User Profile เพื่อจับคู่ Skill-Job อย่างแม่นยำ
+              </p>
+            </div>
+            <div class="card center">
+              <div class="card-icon">📍</div>
+              <h3>Location Intelligence</h3>
+              <p>
+                หาแหล่งเรียนรู้ + งาน ที่ใกล้ผู้ใช้ เพราะโอกาสต้องเข้าถึงทุกที่
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 8: Platform Features -->
+      <div class="slide bg-teal" id="s7">
+        <span class="slide-num">08 / 15</span>
+        <div class="center">
+          <h3>ฟีเจอร์หลัก</h3>
+          <h2>สิ่งที่ User จะได้ใช้จริง</h2>
+          <div class="three-col" style="margin-top: 30px">
+            <div class="card">
+              <div class="card-icon">📋</div>
+              <h3>Smart Dashboard</h3>
+              <p>
+                แสดงความก้าวหน้า, Skill ที่ต้องพัฒนา, เส้นทางที่เหลือ,
+                เป้าหมายอาชีพ
+              </p>
+            </div>
+            <div class="card">
+              <div class="card-icon">🗺️</div>
+              <h3>Learning Path Map</h3>
+              <p>แผนที่การเรียนรู้แบบ Visual พร้อม Milestone และ Checkpoint</p>
+            </div>
+            <div class="card">
+              <div class="card-icon">🤖</div>
+              <h3>AI Advisor</h3>
+              <p>Chatbot ที่ช่วยตอบคำถาม แนะนำ และเป็นพี่เลี้ยงตลอดเส้นทาง</p>
+            </div>
+            <div class="card">
+              <div class="card-icon">👥</div>
+              <h3>Community Hub</h3>
+              <p>กลุ่มเรียนร่วม, Mentor, Forum ถามตอบ, Event / Workshop</p>
+            </div>
+            <div class="card">
+              <div class="card-icon">📍</div>
+              <h3>Near Me Finder</h3>
+              <p>หาแหล่งเรียน/งาน ใกล้บ้าน ทั้ง Online/Offline</p>
+            </div>
+            <div class="card">
+              <div class="card-icon">🏆</div>
+              <h3>Skill Portfolio</h3>
+              <p>รวบรวมผลงาน ใบรับรอง สะสมเป็นโปรไฟล์อาชีพ</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 9: ธีมเชื่อมโยง -->
+      <div class="slide bg-gradient" id="s8">
+        <span class="slide-num">09 / 15</span>
+        <div class="center">
+          <h3>ความสอดคล้องกับธีม</h3>
+          <h2>ครอบคลุม <span class="highlight">ทั้ง 3 ธีมหลัก</span></h2>
+          <div class="three-col" style="margin-top: 30px">
+            <div class="card center" style="border-top: 3px solid var(--teal)">
+              <div class="card-icon">🌿</div>
+              <h3>Society & Environment</h3>
+              <p>
+                ลดความเหลื่อมล้ำการศึกษา<br />ยกระดับคุณภาพชีวิต<br />แก้ปัญหาว่างงานเชิงโครงสร้าง<br />เข้าถึงทุกพื้นที่
+              </p>
+            </div>
+            <div
+              class="card center"
+              style="border-top: 3px solid var(--purple)"
+            >
+              <div class="card-icon">🎨</div>
+              <h3>Creativity</h3>
+              <p>
+                สืบสานภูมิปัญญาผ่านหลักสูตร<br />เชื่อมศูนย์ศิลปาชีพสู่ระบบ<br />สร้างเศรษฐกิจสร้างสรรค์<br />จากฐานทักษะชุมชน
+              </p>
+            </div>
+            <div class="card center" style="border-top: 3px solid var(--gold)">
+              <div class="card-icon">🏙️</div>
+              <h3>Urban Living</h3>
+              <p>
+                รองรับ Urban Migration<br />Lifelong Learning ในเมือง<br />ระบบนิเวศแรงงานยั่งยืน<br />พัฒนาอย่างยั่งยืน
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 10: Business Model -->
+      <div class="slide bg-dark" id="s9">
+        <span class="slide-num">10 / 15</span>
+        <div class="center">
+          <h3>โมเดลธุรกิจ</h3>
+          <h2>
+            Revenue Model – <span class="highlight">User ไม่ต้องจ่ายเลย</span>
+          </h2>
+          <table class="simple-table" style="margin-top: 30px">
+            <thead>
+              <tr>
+                <th>แหล่งรายได้</th>
+                <th>ใครจ่าย</th>
+                <th>รายละเอียด</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>💼 Placement Fee</strong></td>
+                <td>Company</td>
+                <td>
+                  ค่าธรรมเนียมเมื่อจับคู่งานสำเร็จ (ถูกกว่า Recruiter 50%)
+                </td>
+              </tr>
+              <tr>
+                <td><strong>🏢 CSR Package</strong></td>
+                <td>Company</td>
+                <td>แพ็กเกจสนับสนุนการศึกษา → ลดภาษี + PR ดี</td>
+              </tr>
+              <tr>
+                <td><strong>📊 Premium Analytics</strong></td>
+                <td>Company</td>
+                <td>Dashboard วิเคราะห์ Talent Pool เชิงลึก</td>
+              </tr>
+              <tr>
+                <td><strong>🏛️ Government Grant</strong></td>
+                <td>ภาครัฐ</td>
+                <td>สอดคล้อง กยศ. / กรมพัฒนาฝีมือแรงงาน</td>
+              </tr>
+            </tbody>
+          </table>
+          <p style="margin-top: 30px">
+            <span class="badge badge-teal">Social Enterprise Model</span>
+            ไม่มุ่งกำไรสูงสุด เน้น Impact สูงสุด
+          </p>
+        </div>
+      </div>
+
+      <!-- SLIDE 11: Job Guarantee -->
+      <div class="slide bg-teal" id="s10">
+        <span class="slide-num">11 / 15</span>
+        <div class="center">
+          <h3>จุดขายสำคัญ</h3>
+          <h2>ระบบ <span class="highlight-gold">การันตีงาน</span> 3 ชั้น</h2>
+          <div class="three-col" style="margin-top: 30px">
+            <div class="card center">
+              <div class="card-icon">📝</div>
+              <h3>MOU Contract</h3>
+              <p>
+                บริษัทลงนามรับผู้ผ่านเกณฑ์<br />O-guard เป็นตัวกลางรับประกัน<br />เงื่อนไขชัดเจนทั้ง
+                2 ฝ่าย
+              </p>
+            </div>
+            <div class="card center">
+              <div class="card-icon">🏅</div>
+              <h3>Skill Certification</h3>
+              <p>
+                ใบรับรองจาก O-guard<br />ที่บริษัทยอมรับ<br />ผ่านเกณฑ์เข้มข้น =
+                คุณภาพสูง
+              </p>
+            </div>
+            <div class="card center">
+              <div class="card-icon">⚡</div>
+              <h3>Flexible Choice</h3>
+              <p>
+                ผ่านแล้วเลือกได้:<br />✅ รับงานที่เสนอ<br />📁
+                เก็บเป็นโปรไฟล์ไว้ใช้ภายหลัง
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 12: Roadmap -->
+      <div class="slide bg-purple" id="s11">
+        <span class="slide-num">12 / 15</span>
+        <div class="center">
+          <h3>แผนดำเนินงาน</h3>
+          <h2>Roadmap</h2>
+          <div class="progress-track">
+            <div class="progress-phase active">
+              <h4>Phase 1</h4>
+              <p>
+                เดือน 1-3<br />MVP + Prototype<br />Skill Assessment<br />+
+                Course Aggregation
+              </p>
+            </div>
+            <div class="progress-phase">
+              <h4>Phase 2</h4>
+              <p>เดือน 4-6<br />Pilot<br />5 บริษัท<br />100 ผู้เรียน</p>
+            </div>
+            <div class="progress-phase">
+              <h4>Phase 3</h4>
+              <p>เดือน 7-12<br />Scale Up<br />50 บริษัท<br />1,000 ผู้เรียน</p>
+            </div>
+            <div class="progress-phase">
+              <h4>Phase 4</h4>
+              <p>ปีที่ 2<br />Nationwide<br />+ เพิ่ม Industry<br />Vertical</p>
+            </div>
+          </div>
+          <table class="simple-table" style="margin-top: 20px">
+            <thead>
+              <tr>
+                <th>ความเสี่ยง</th>
+                <th>การจัดการ</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>บริษัทไม่เข้าร่วม</td>
+                <td>เริ่มจาก Partnership กับสภาอุตสาหกรรม + บริษัทที่มี CSR</td>
+              </tr>
+              <tr>
+                <td>ผู้เรียน Drop-out</td>
+                <td>Gamification + Mentor + เงื่อนไขเข้มข้น = คัดคนจริงจัง</td>
+              </tr>
+              <tr>
+                <td>คุณภาพหลักสูตร</td>
+                <td>QA Committee + Rating System + ตรวจสอบมาตรฐาน</td>
+              </tr>
+              <tr>
+                <td>ข้อมูลส่วนบุคคล</td>
+                <td>PDPA Compliance + Consent Management + Encryption</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- SLIDE 13: KPIs -->
+      <div class="slide bg-dark" id="s12">
+        <span class="slide-num">13 / 15</span>
+        <div class="center">
+          <h3>เป้าหมายเชิงตัวเลข</h3>
+          <h2>KPIs ปีแรก</h2>
+          <div class="four-col" style="margin-top: 40px">
+            <div class="card center">
+              <div class="stat-num">1,000</div>
+              <div class="stat-label">User ลงทะเบียน</div>
+            </div>
+            <div class="card center">
+              <div class="stat-num">≥60%</div>
+              <div class="stat-label">Completion Rate</div>
+            </div>
+            <div class="card center">
+              <div class="stat-num">≥70%</div>
+              <div class="stat-label">Placement Rate</div>
+            </div>
+            <div class="card center">
+              <div class="stat-num">20</div>
+              <div class="stat-label">Company Partners</div>
+            </div>
+          </div>
+          <div class="three-col" style="margin-top: 16px">
+            <div class="card center">
+              <div class="stat-num">10</div>
+              <div class="stat-label">Learning Providers</div>
+            </div>
+            <div class="card center">
+              <div class="stat-num">NPS ≥40</div>
+              <div class="stat-label">User Satisfaction</div>
+            </div>
+            <div class="card center">
+              <div class="stat-num">SDG 4,8</div>
+              <div class="stat-label">UN Goals Aligned</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 14: Social Impact -->
+      <div class="slide bg-teal" id="s13">
+        <span class="slide-num">14 / 15</span>
+        <div class="center">
+          <h3>Social Impact</h3>
+          <h2>ผลกระทบเชิงสังคม</h2>
+          <div class="two-col" style="margin-top: 30px">
+            <div>
+              <div class="card" style="margin-bottom: 16px">
+                <h3>🎯 SDG 4: การศึกษาที่มีคุณภาพ</h3>
+                <p>
+                  เปิดโอกาสเข้าถึงการเรียนรู้ฟรี/ต้นทุนต่ำ
+                  ลดความเหลื่อมล้ำทางการศึกษา ส่งเสริม Lifelong Learning
+                </p>
+              </div>
+              <div class="card">
+                <h3>💼 SDG 8: งานที่ดีและการเติบโตทางเศรษฐกิจ</h3>
+                <p>
+                  ลด Skill Mismatch สร้างแรงงานคุณภาพตรงความต้องการตลาด
+                  ลดอัตราว่างงานเชิงโครงสร้าง
+                </p>
+              </div>
+            </div>
+            <div>
+              <div class="card" style="margin-bottom: 16px">
+                <h3>🌏 Impact ต่อสังคมไทย</h3>
+                <p>
+                  • ยกระดับรายได้ครัวเรือน<br />•
+                  อนุรักษ์ภูมิปัญญาท้องถิ่นผ่านหลักสูตร<br />•
+                  ลดการอพยพแรงงานไร้ทิศทาง<br />• สร้างระบบนิเวศแรงงานยั่งยืน
+                </p>
+              </div>
+              <div class="card">
+                <h3>🤝 สืบสานพระราชปณิธาน</h3>
+                <p>
+                  ต่อยอดแนวทางศูนย์ศิลปาชีพ + ฟาร์มตัวอย่าง
+                  ด้วยเทคโนโลยีดิจิทัลยุคใหม่ ให้คนไทยพึ่งพาตนเองได้อย่างยั่งยืน
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 15: Thank You -->
+      <div class="slide bg-gradient" id="s14">
+        <span class="slide-num">15 / 15</span>
+        <div class="center">
+          <div class="float">
+            <img
+              src="oguard_logo_1772784850440.png"
+              alt="O-guard Logo"
+              class="logo-img"
+              style="width: 120px; height: 120px"
+              onerror="this.style.display = 'none'"
+            />
+          </div>
+          <h1>O-guard</h1>
+          <p class="tagline" style="margin-bottom: 30px">
+            ผู้พิทักษ์โอกาสแห่งการเรียนรู้และอาชีพ
+          </p>
+          <h2 style="font-size: 1.8rem">
+            <span class="highlight">"คนได้งาน งานได้คน"</span>
+          </h2>
+          <p style="margin-top: 30px; font-size: 1.1rem">
+            เพราะทุกคนสมควรได้โอกาสที่เท่าเทียม<br />ในการเรียนรู้ พัฒนาตัวเอง
+            และมีอาชีพที่มั่นคง
+          </p>
+          <p style="margin-top: 40px; color: var(--muted)">
+            ขอบคุณครับ / ค่ะ 🙏
+          </p>
+          <p style="margin-top: 16px">
+            <span class="badge badge-teal">Q&A</span>
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Navigation -->
+    <div class="nav" id="nav"></div>
+    <div class="nav-arrows">
+      <button class="nav-btn" onclick="changeSlide(-1)">◀</button>
+      <button class="nav-btn" onclick="changeSlide(1)">▶</button>
+    </div>
+
+    <script>
+      const totalSlides = 15;
+      let current = 0;
+
+      // Build nav dots
+      const nav = document.getElementById("nav");
+      for (let i = 0; i < totalSlides; i++) {
+        const dot = document.createElement("div");
+        dot.className = "nav-dot" + (i === 0 ? " active" : "");
+        dot.onclick = () => goToSlide(i);
+        nav.appendChild(dot);
+      }
+
+      function goToSlide(n) {
+        const slides = document.querySelectorAll(".slide");
+        const dots = document.querySelectorAll(".nav-dot");
+        slides[current].classList.remove("active");
+        dots[current].classList.remove("active");
+        current = n;
+        slides[current].classList.add("active");
+        dots[current].classList.add("active");
+      }
+
+      function changeSlide(dir) {
+        const next = current + dir;
+        if (next >= 0 && next < totalSlides) goToSlide(next);
+      }
+
+      // Keyboard & touch navigation
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "ArrowRight" || e.key === " ") changeSlide(1);
+        if (e.key === "ArrowLeft") changeSlide(-1);
+      });
+      let touchStartX = 0;
+      document.addEventListener(
+        "touchstart",
+        (e) => (touchStartX = e.touches[0].clientX),
+      );
+      document.addEventListener("touchend", (e) => {
+        const diff = e.changedTouches[0].clientX - touchStartX;
+        if (Math.abs(diff) > 50) changeSlide(diff > 0 ? -1 : 1);
+      });
+    </script>
+  </body>
+</html>
