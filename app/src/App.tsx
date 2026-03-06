@@ -2,17 +2,18 @@ import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom'
 import Login from './pages/Login'
 import Home from './pages/Home'
 import Profile from './pages/Profile'
-import Idol from './pages/Idol'
+import SkillGap from './pages/SkillGap'
 import Learning from './pages/Learning'
 import Assessment from './pages/Assessment'
 import CoursePage from './pages/CoursePage'
+import JobOffer from './pages/JobOffer'
 import BottomNav from './components/BottomNav'
 import TopBar from './components/TopBar'
 
 function AppLayout() {
   const location = useLocation()
-  const hideNav = ['/login', '/assessment'].includes(location.pathname)
-  const hideTop = ['/login', '/assessment'].includes(location.pathname)
+  const hideNav = ['/login', '/assessment', '/job-offer'].some(p => location.pathname.startsWith(p))
+  const hideTop = ['/login', '/assessment', '/job-offer'].some(p => location.pathname.startsWith(p))
 
   return (
     <>
@@ -22,10 +23,11 @@ function AppLayout() {
           <Route path="/login" element={<Login />} />
           <Route path="/" element={<Home />} />
           <Route path="/profile" element={<Profile />} />
-          <Route path="/idol" element={<Idol />} />
+          <Route path="/gap" element={<SkillGap />} />
           <Route path="/learning" element={<Learning />} />
           <Route path="/assessment" element={<Assessment />} />
           <Route path="/course/:id" element={<CoursePage />} />
+          <Route path="/job-offer/:id" element={<JobOffer />} />
         </Routes>
       </div>
       {!hideNav && <BottomNav />}

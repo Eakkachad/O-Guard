@@ -10,144 +10,151 @@ export default function Profile() {
   return (
     <div>
       {/* Profile Header */}
-      <div style={{ padding: '20px 16px', textAlign: 'center' }}>
+      <div style={{ padding: '32px 20px 20px', textAlign: 'center', background: '#ffffff', borderRadius: '0 0 32px 32px', boxShadow: '0 4px 20px rgba(0,0,0,0.02)', marginBottom: 24 }}>
         <div style={{
-          width: 64, height: 64, borderRadius: '50%', background: '#e6e622',
+          width: 80, height: 80, borderRadius: '50%', background: '#f0fdfa',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
-          margin: '0 auto 10px',
+          margin: '0 auto 16px', boxShadow: '0 8px 24px rgba(45, 212, 191, 0.2)'
         }}>
-          <User size={28} color="#000" strokeWidth={2} />
+          <User size={36} color="var(--accent)" strokeWidth={2.5} />
         </div>
-        <h2 style={{ fontSize: 18, fontWeight: 700 }}>สมชาย รักเรียน</h2>
-        <p style={{ fontSize: 12, color: '#888', marginTop: 4 }}>อันดับ #1 บน O-guard</p>
+        <h2 style={{ fontSize: 22, fontWeight: 800, color: 'var(--text)' }}>สมชาย รักเรียน</h2>
+        <div style={{ display: 'inline-block', background: '#ecfdf5', padding: '4px 12px', borderRadius: 20, marginTop: 8 }}>
+          <p style={{ fontSize: 12, color: 'var(--success)', fontWeight: 700 }}>🏆 อันดับ #1 บน O-guard</p>
+        </div>
       </div>
 
       {/* Stats */}
-      <div style={{ display: 'flex', gap: 10, padding: '0 16px', marginBottom: 20 }}>
+      <div style={{ display: 'flex', gap: 12, padding: '0 20px', marginBottom: 32 }}>
         {[
-          { icon: BookOpen, num: '4', label: 'เรียนจบ', color: '#e6e622' },
-          { icon: Award, num: '1', label: 'ใบรับรอง', color: '#4ade80' },
-          { icon: Briefcase, num: '3', label: 'งานรอ Match', color: '#60a5fa' },
+          { icon: BookOpen, num: '4', label: 'เรียนจบ', color: '#38bdf8', bg: '#e0f2fe' },
+          { icon: Award, num: '1', label: 'ใบรับรอง', color: '#10b981', bg: '#d1fae5' },
+          { icon: Briefcase, num: '3', label: 'งานรอ Match', color: '#8b5cf6', bg: '#ede9fe' },
         ].map((s, i) => (
           <div key={i} style={{
-            flex: 1, background: '#1a1a1a', borderRadius: 12, padding: '14px',
-            textAlign: 'center', border: '1px solid #2a2a2a',
+            flex: 1, background: '#ffffff', borderRadius: 20, padding: '16px 10px',
+            textAlign: 'center', boxShadow: '0 8px 24px rgba(0,0,0,0.04)',
+            display: 'flex', flexDirection: 'column', alignItems: 'center'
           }}>
-            <s.icon size={16} color="#555" style={{ marginBottom: 6 }} />
-            <div style={{ fontSize: 20, fontWeight: 700, color: s.color }}>{s.num}</div>
-            <div style={{ fontSize: 10, color: '#555' }}>{s.label}</div>
+            <div style={{ width: 32, height: 32, borderRadius: 10, background: s.bg, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 8 }}>
+              <s.icon size={16} color={s.color} strokeWidth={2.5} />
+            </div>
+            <div style={{ fontSize: 22, fontWeight: 800, color: 'var(--text)' }}>{s.num}</div>
+            <div style={{ fontSize: 11, color: 'var(--text-muted)', fontWeight: 600 }}>{s.label}</div>
           </div>
         ))}
       </div>
 
-      {/* Skill Portfolio — what O-guard verified */}
-      <div style={{ padding: '0 16px 8px' }}>
-        <h3 style={{ fontSize: 15, fontWeight: 700 }}>Skill Portfolio</h3>
-        <p style={{ fontSize: 11, color: '#555', marginTop: 2 }}>O-guard ติดตามและยืนยันทักษะของคุณ</p>
+      {/* Skill Portfolio */}
+      <div style={{ padding: '0 20px 12px' }}>
+        <h3 style={{ fontSize: 18, fontWeight: 800, color: 'var(--text)' }}>Skill Portfolio</h3>
+        <p style={{ fontSize: 13, color: 'var(--text-muted)', marginTop: 4, fontWeight: 500 }}>O-guard ติดตามและยืนยันทักษะของคุณ</p>
       </div>
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, padding: '0 16px', marginBottom: 16 }}>
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, padding: '0 20px', marginBottom: 32 }}>
         {[
-          { name: 'จัดการคลังสินค้า', verified: true },
-          { name: 'การบริหารสต็อก (GRN/CN)', verified: true },
-          { name: 'เชื่อมไฟฟ้า MIG/TIG', verified: true },
-          { name: 'โซเชียลมีเดียแอดมิน', verified: false },
-          { name: 'เครื่องมือขนถ่ายโลจิสติกส์', verified: false },
+          { name: 'จัดการคลังสินค้าดิจิทัล (WMS)', verified: true },
+          { name: 'ความปลอดภัยในโรงงาน (Safety)', verified: true },
+          { name: 'Python for Data Automation', verified: true },
+          { name: 'Programming PLC & Robot', verified: false },
+          { name: 'Supply Chain Data Analytics', verified: false },
         ].map((skill, i) => (
           <span key={i} style={{
-            padding: '6px 12px', borderRadius: 20, fontSize: 11, fontWeight: 500,
-            display: 'flex', alignItems: 'center', gap: 4,
-            background: skill.verified ? '#1e3a1e' : '#1a1a1a',
-            color: skill.verified ? '#4ade80' : '#555',
-            border: `1px solid ${skill.verified ? '#2d5a2d' : '#2a2a2a'}`,
+            padding: '8px 14px', borderRadius: 20, fontSize: 12, fontWeight: 700,
+            display: 'flex', alignItems: 'center', gap: 6,
+            background: skill.verified ? '#ecfdf5' : '#ffffff',
+            color: skill.verified ? 'var(--success)' : 'var(--text-muted)',
+            border: skill.verified ? '1px solid #d1fae5' : '1px solid #e2e8f0',
+            boxShadow: '0 2px 8px rgba(0,0,0,0.02)'
           }}>
-            {skill.verified && <CheckCircle2 size={12} />}
-            {!skill.verified && <Clock size={12} />}
+            {skill.verified ? <CheckCircle2 size={14} strokeWidth={2.5} /> : <Clock size={14} />}
             {skill.name}
           </span>
         ))}
       </div>
 
-      {/* Currently tracking — external resources */}
-      <div style={{ padding: '16px 16px 8px' }}>
-        <h3 style={{ fontSize: 15, fontWeight: 700 }}>กำลังติดตาม</h3>
+      {/* Currently tracking */}
+      <div style={{ padding: '0 20px 12px' }}>
+        <h3 style={{ fontSize: 18, fontWeight: 800, color: 'var(--text)' }}>กำลังติดตาม</h3>
       </div>
       <div
         onClick={() => navigate('/course/4')}
         style={{
-          margin: '0 16px 10px', background: '#1a1a1a', borderRadius: 14,
-          padding: '14px', border: '1px solid #2a2a2a', cursor: 'pointer',
-          display: 'flex', gap: 12, alignItems: 'center',
+          margin: '0 20px 24px', background: '#ffffff', borderRadius: 24,
+          padding: '16px', cursor: 'pointer', display: 'flex', gap: 14, alignItems: 'center',
+          boxShadow: '0 8px 24px rgba(0,0,0,0.04)'
         }}
       >
         <div style={{
-          width: 48, height: 48, borderRadius: 10, background: '#222',
+          width: 52, height: 52, borderRadius: 16, background: '#f0fdfa',
           display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
         }}>
-          <BookOpen size={20} color="#e6e622" strokeWidth={1.5} />
+          <BookOpen size={24} color="var(--accent)" strokeWidth={2} />
         </div>
         <div style={{ flex: 1 }}>
-          <h4 style={{ fontSize: 13, fontWeight: 600, marginBottom: 2 }}>ช่างเชื่อมไฟฟ้า งานเชื่อม...</h4>
+          <h4 style={{ fontSize: 15, fontWeight: 800, marginBottom: 4, color: 'var(--text)' }}>Programming PLC & Robot</h4>
           <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-            <ExternalLink size={10} color="#888" />
-            <span style={{ fontSize: 11, color: '#888' }}>DSD Online Training</span>
+            <ExternalLink size={12} color="var(--text-muted)" />
+            <span style={{ fontSize: 12, color: 'var(--text-muted)', fontWeight: 500 }}>DSD Online Training</span>
           </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 6 }}>
-            <div style={{ flex: 1, height: 6, background: '#333', borderRadius: 3, overflow: 'hidden' }}>
-              <div style={{ width: '70%', height: '100%', borderRadius: 3, background: 'linear-gradient(90deg, #c8e622, #e6e622)' }} />
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginTop: 10 }}>
+            <div style={{ flex: 1, height: 8, background: '#f1f5f9', borderRadius: 4, overflow: 'hidden' }}>
+              <div style={{ width: '70%', height: '100%', borderRadius: 4, background: 'var(--accent-gradient)' }} />
             </div>
-            <span style={{ fontSize: 11, color: '#e6e622', fontWeight: 600 }}>70%</span>
+            <span style={{ fontSize: 12, color: 'var(--accent)', fontWeight: 800 }}>70%</span>
           </div>
         </div>
       </div>
 
       {/* Certifications */}
-      <div style={{ padding: '16px 16px 8px' }}>
-        <h3 style={{ fontSize: 15, fontWeight: 700 }}>ใบรับรอง</h3>
+      <div style={{ padding: '0 20px 12px' }}>
+        <h3 style={{ fontSize: 18, fontWeight: 800, color: 'var(--text)' }}>ใบรับรอง</h3>
       </div>
       <div style={{
-        margin: '0 16px 10px', background: '#1a1a1a', borderRadius: 14,
-        padding: '14px', border: '1px solid #2a2a2a',
-        display: 'flex', gap: 12, alignItems: 'center',
+        margin: '0 20px 32px', background: '#ffffff', borderRadius: 24,
+        padding: '16px', display: 'flex', gap: 14, alignItems: 'center',
+        boxShadow: '0 8px 24px rgba(0,0,0,0.04)'
       }}>
         <div style={{
-          width: 48, height: 48, borderRadius: 10, background: '#1e3a1e',
+          width: 52, height: 52, borderRadius: 16, background: '#ecfdf5',
           display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
         }}>
-          <Award size={20} color="#4ade80" strokeWidth={1.5} />
+          <Award size={24} color="var(--success)" strokeWidth={2} />
         </div>
         <div>
-          <h4 style={{ fontSize: 13, fontWeight: 600, marginBottom: 2 }}>สาขาวิชาชีพโลจิสติกส์</h4>
-          <p style={{ fontSize: 11, color: '#4ade80', fontWeight: 600 }}>ได้รับการยืนยัน</p>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 4, marginTop: 2 }}>
-            <ExternalLink size={10} color="#555" />
-            <span style={{ fontSize: 10, color: '#555' }}>TPQI e-Training · 15 มี.ค. 2026</span>
+          <h4 style={{ fontSize: 15, fontWeight: 800, marginBottom: 4, color: 'var(--text)' }}>สาขาวิชาชีพโลจิสติกส์การค้า</h4>
+          <p style={{ fontSize: 12, color: 'var(--success)', fontWeight: 700 }}>ได้รับการยืนยันการรับรอง</p>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 4, marginTop: 4 }}>
+            <ExternalLink size={12} color="var(--text-dim)" />
+            <span style={{ fontSize: 11, color: 'var(--text-dim)', fontWeight: 500 }}>TPQI e-Training • 15 มี.ค. 2026</span>
           </div>
         </div>
       </div>
 
       {/* Learning Activity Chart */}
-      <div style={{ padding: '16px 16px 8px', display: 'flex', alignItems: 'center', gap: 6 }}>
-        <BarChart3 size={16} color="#888" />
-        <h3 style={{ fontSize: 15, fontWeight: 700 }}>เวลาที่ใช้เรียน</h3>
+      <div style={{ padding: '0 20px 12px', display: 'flex', alignItems: 'center', gap: 8 }}>
+        <BarChart3 size={20} color="var(--text-muted)" />
+        <h3 style={{ fontSize: 18, fontWeight: 800, color: 'var(--text)' }}>เวลาที่ใช้เรียน</h3>
       </div>
       <div style={{
-        margin: '0 16px 20px', background: '#1a1a1a', borderRadius: 14,
-        padding: '16px', border: '1px solid #2a2a2a',
+        margin: '0 20px 40px', background: '#ffffff', borderRadius: 24,
+        padding: '24px', boxShadow: '0 8px 24px rgba(0,0,0,0.04)'
       }}>
-        <div style={{ display: 'flex', alignItems: 'flex-end', gap: 6, height: 80, marginBottom: 8 }}>
-          {[30, 45, 20, 60, 40, 55, 35, 50, 25, 65, 40, 30].map((h, i) => (
+        <div style={{ display: 'flex', alignItems: 'flex-end', gap: 8, height: 100, marginBottom: 12 }}>
+          {[30, 45, 20, 60, 40, 55, 35, 50, 25, 85, 40, 30].map((h, i) => (
             <div key={i} style={{
-              flex: 1, height: `${h}%`, borderRadius: '3px 3px 0 0',
-              background: i === 9 ? '#e6e622' : '#333',
+              flex: 1, height: `${h}%`, borderRadius: '4px 4px 0 0',
+              background: i === 9 ? 'var(--accent)' : '#f1f5f9',
             }} />
           ))}
         </div>
-        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 9, color: '#555' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 11, color: 'var(--text-dim)', fontWeight: 600 }}>
           {['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'].map(m => (
             <span key={m}>{m}</span>
           ))}
         </div>
       </div>
+      
+      <div style={{ height: 40 }} />
     </div>
   )
 }

@@ -12,9 +12,9 @@ const questions = [
   },
   { 
     key: 'industry', 
-    label: 'กลุ่มอุตสาหกรรมหรือสายงานที่คุณสนใจที่สุดในตอนนี้?', 
+    label: 'กลุ่มอุตสาหกรรมเป้าหมายที่คุณสนใจ?', 
     type: 'radio', 
-    options: ['งานคลังสินค้าและโลจิสติกส์ (Logistics)', 'งานช่างฝีมือและงานบริการ (Craft & Service)', 'งานด้านดิจิทัลและการจัดการ (Digital)'],
+    options: ['เทคโนโลยีการผลิตและหุ่นยนต์', 'โลจิสติกส์การค้าและคลังสินค้า', 'ซ่อมบำรุงอัจฉริยะ'],
     icon: Heart 
   },
   { 
@@ -47,70 +47,75 @@ export default function Assessment() {
   }
 
   return (
-    <div style={{ minHeight: '100vh', background: '#0a0a0a', padding: '60px 20px 40px' }}>
+    <div style={{ minHeight: '100vh', background: 'var(--bg)', padding: '40px 20px 40px' }}>
+      {/* Back */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
+        <div
+          onClick={() => step > 0 ? setStep(s => s - 1) : navigate('/')}
+          style={{ width: 40, height: 40, background: '#ffffff', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', boxShadow: '0 4px 12px rgba(0,0,0,0.04)' }}
+        >
+          {step > 0 ? <ArrowLeft size={20} color="var(--text)" /> : <X size={20} color="var(--text)" />}
+        </div>
+      </div>
+
       {/* Progress */}
-      <div style={{ display: 'flex', gap: 4, marginBottom: 32 }}>
+      <div style={{ display: 'flex', gap: 6, marginBottom: 40 }}>
         {questions.map((_, i) => (
           <div key={i} style={{
-            flex: 1, height: 4, borderRadius: 2,
-            background: i <= step ? '#e6e622' : '#333', transition: '.3s',
+            flex: 1, height: 6, borderRadius: 3,
+            background: i <= step ? 'var(--accent)' : '#e2e8f0', transition: '.3s',
           }} />
         ))}
       </div>
 
-      {/* Back */}
-      <div
-        onClick={() => step > 0 ? setStep(s => s - 1) : navigate('/')}
-        style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 13, color: '#888', cursor: 'pointer', marginBottom: 24 }}
-      >
-        {step > 0 ? <><ArrowLeft size={14} /> กลับ</> : <><X size={14} /> ยกเลิก</>}
-      </div>
-
       {/* Icon + Question */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 16 }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 24 }}>
         <div style={{
-          width: 40, height: 40, borderRadius: 10, background: '#1a1a1a',
+          width: 50, height: 50, borderRadius: 16, background: '#ffffff',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
-          border: '1px solid #2a2a2a',
+          boxShadow: '0 8px 20px rgba(45, 212, 191, 0.15)',
         }}>
-          <Icon size={20} color="#e6e622" strokeWidth={1.5} />
+          <Icon size={24} color="var(--accent)" strokeWidth={2} />
         </div>
-        <span style={{ fontSize: 12, color: '#555' }}>คำถาม {step + 1}/{questions.length}</span>
+        <span style={{ fontSize: 14, color: 'var(--text-muted)', fontWeight: 600 }}>คำถามที่ {step + 1} จาก {questions.length}</span>
       </div>
-      <h2 style={{ fontSize: 18, fontWeight: 700, marginBottom: 24, lineHeight: 1.5 }}>{q.label}</h2>
+      <h2 style={{ fontSize: 24, fontWeight: 800, marginBottom: 32, lineHeight: 1.4, color: 'var(--text)' }}>{q.label}</h2>
 
       {q.type === 'radio' && q.options?.map(opt => (
         <div
           key={opt}
           onClick={() => setAnswers({ ...answers, [q.key]: opt })}
           style={{
-            padding: '14px 16px', background: '#1a1a1a', borderRadius: 10,
-            border: answers[q.key] === opt ? '2px solid #e6e622' : '1px solid #333',
-            marginBottom: 10, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 10,
+            padding: '20px', background: '#ffffff', borderRadius: 20,
+            border: answers[q.key] === opt ? '2px solid var(--accent)' : '2px solid transparent',
+            marginBottom: 16, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 16,
+            boxShadow: '0 8px 24px rgba(0,0,0,0.03)',
+            transition: '0.2s'
           }}
         >
           <div style={{
-            width: 18, height: 18, borderRadius: '50%',
-            border: answers[q.key] === opt ? '5px solid #e6e622' : '2px solid #555',
+            width: 24, height: 24, borderRadius: '50%',
+            border: answers[q.key] === opt ? '7px solid var(--accent)' : '2px solid #cbd5e1',
           }} />
-          <span style={{ fontSize: 14 }}>{opt}</span>
+          <span style={{ fontSize: 16, fontWeight: 600, color: 'var(--text)' }}>{opt}</span>
         </div>
       ))}
 
       <button
         onClick={handleNext}
         style={{
-          width: '100%', padding: '16px', border: 'none', borderRadius: 12,
-          background: 'linear-gradient(135deg, #c8e622, #e6e622)',
-          color: '#000', fontSize: 15, fontWeight: 700, marginTop: 32,
+          width: '100%', padding: '18px', border: 'none', borderRadius: 20,
+          background: 'var(--accent)',
+          color: '#ffffff', fontSize: 16, fontWeight: 800, marginTop: 40,
           cursor: 'pointer', fontFamily: 'inherit',
           display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
+          boxShadow: '0 8px 24px rgba(45, 212, 191, 0.4)',
         }}
       >
         {step < questions.length - 1 ? (
-          <>ถัดไป <ChevronRight size={18} /></>
+          <>ดำเนินการต่อ <ChevronRight size={20} strokeWidth={3} /></>
         ) : (
-          <>ค้นหาสิ่งที่เหมาะกับคุณ <Target size={18} /></>
+          <>ประมวลผล Skill Gap <Target size={20} strokeWidth={2.5} /></>
         )}
       </button>
     </div>
