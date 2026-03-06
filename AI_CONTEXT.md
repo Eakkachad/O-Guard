@@ -1,43 +1,84 @@
-# AI Context for SkillBridge (O-Guard Repository)
+# AI Context for O-Guard (ผู้พิทักษ์โอกาสแห่งการเรียนรู้และอาชีพ)
 
 ## 📌 Introduction
 
-This file serves as the **Single Source of Truth** for all AI assistants (like Antigravity, Cursor, Windsurf, Copilot, etc.) working on this repository.
+This file serves as the **Single Source of Truth** for all AI assistants (Antigravity, Cursor, Windsurf, Copilot, etc.) working on this repository.
 Whenever an AI starts a new session or is asked to understand the system, it MUST read this file first to align its context with the entire team.
 
-## 🎯 Project Overview: "SkillBridge" (สะพานทักษะ เชื่อมคนสู่งาน)
+## 🎯 Project Overview
 
-SkillBridge is a 2-sided marketplace platform designed to bridge the gap between industrial demands and opportunity seekers through an intelligent learning path recommendation system.
+O-Guard is an **AI-Powered 2-sided marketplace platform** that bridges the gap between industrial labor demands and opportunity seekers in Thailand through an intelligent learning path recommendation system.
 
-- **Goal:** To solve the structural unemployment and skill mismatch problem in Thailand.
-- **Target Audience:** Job seekers (upskill/reskill) and Factory/Employers.
+- **Goal:** Solve structural unemployment and skill mismatch in Thailand.
+- **Target Audience:** Job seekers (upskill/reskill) and Employers (Factories/Enterprises).
 - **Unique Value Proposition (UVP):** Guaranteed job placement upon completing the learning path + Focus on free/low-cost learning resources.
+- **Brand Name:** O-Guard (ผู้พิทักษ์โอกาส)
 
 ## 🏗 System Architecture & Tech Stack
 
-- **Frontend App:** Built with React, TypeScript (`.tsx`), and Vite.
-- **Styling:** CSS (`index.css`), potentially Tailwind (if configured).
-- **Core Modules:**
-  1. **AI Matching Engine:** Matches user skills with Job Requirements (NLP).
-  2. **Skill Gap Analyzer:** Analyzes missing skills compared to specific job roles.
-  3. **Learning Path Generator:** Aggregates courses (MOOCs, Thai Government Departments).
-  4. **Progress & Assessment Tracker:** Gamification and progress tracking.
-  5. **Job Guarantee System:** System for employers to hire verified candidates.
+### Frontend
+
+- **Framework:** React 18 + TypeScript (`.tsx`) + Vite
+- **Styling:** CSS3 (Modern, Responsive)
+
+### Backend (Decided)
+
+- **Framework:** Python FastAPI
+- **Database:** PostgreSQL (Relational) + Vector Database (e.g., Qdrant/Pinecone) for Embedding
+- **Deployment:** Cloud (AWS/GCP), Microservices architecture for independent scaling
+
+### AI/ML Strategy (Decided)
+
+- **Approach:** Pre-trained models + Fine-tuning with Thai labor market data to save resources
+- **NLP (Skill Extraction):** LLM API (GPT/Claude) for Phase 1, Fine-tuned model for Phase 2
+- **Embedding:** Pre-trained Sentence-Transformers / OpenAI Embedding API
+- **Recommendation:** Collaborative Filtering
+- **Chatbot:** RAG (Retrieval-Augmented Generation) from O-Guard's own data
+
+### Core AI Modules
+
+1. **Skill Gap Analyzer (NLP + ML Classification):** Reads Job Descriptions → Extracts required skills → Compares with user profile → Shows % gap
+2. **Skill Taxonomy Graph:** Knowledge graph linking Skills ↔ Jobs ↔ Courses
+3. **Learning Path Generator (Recommendation System):** Creates personalized learning paths using Collaborative Filtering
+4. **RAG Chatbot:** Answers questions using real data from O-Guard's database, not generic AI
+5. **Vector Embedding (Job Matching):** Converts profiles to vectors for accurate matching
+6. **Progress Tracker (Gamification + Data Analytics):** Unified dashboard for all learning progress
+
+### Learning Verification System (3 Tiers)
+
+1. **🟢 Tier 1 – Direct API:** Real-time data from Thai MOOC, Coursera, กรมพัฒนาฝีมือแรงงาน via API
+2. **🟡 Tier 2 – Cross-check with Issuers:** User uploads certificate → O-Guard contacts the issuing organization to verify authenticity
+3. **🔴 Tier 3 – Coordinated Exams:** O-Guard gathers candidates → Arranges testing sessions with accredited bodies (กรมพัฒนาฝีมือแรงงาน, TPQI) → Certificates issued by the official body, not O-Guard
+
+### Data & Privacy (Decided)
+
+- **Compliance:** PDPA (Privacy by Design)
+- **Consent:** Required before collecting user data
+- **User Rights:** Users can request data deletion at any time
+- **Encryption:** Data encrypted at rest and in transit
 
 ## 🤖 AI Assistant Rules & Workflows
 
-To ensure all AIs across the team are synchronized, follow these rules:
-
-1. **Always Read First:** Before making structural changes, read this `AI_CONTEXT.md`.
-2. **Update Automatically:** If a major architectural change is made, a new core feature is added, or a new tech stack is introduced, the AI MUST update this `AI_CONTEXT.md` file and push it to the repository.
-3. **Commit Messages:** Prefix commits with `[AI Sync]` when updating the context file.
-4. **Follow Workflows:** Check `.agents/workflows/` for predefined AI tasks and automation steps.
+1. **Always Read First:** Before structural changes, read this `AI_CONTEXT.md`.
+2. **Update on Changes:** If architecture/features/stack changes, update this file and push.
+3. **Commit Messages:** Prefix with `[AI Sync]` when updating context.
+4. **Follow Workflows:** Check `.agents/workflows/` for predefined AI workflows.
 
 ## 🚀 Current Roadmap & State
 
-- **Phase 1 (MVP):** Focus on Skill Assessment + Course Aggregation.
-- **Current Active Development:** Prototyping and creating the interactive Demo (as seen in recent `demo-app.html` and `Presentation.html` work, and the React app in `/app`).
+- **Phase 1 (MVP):** Skill Assessment + Course Aggregation + Frontend Prototype
+- **Phase 2:** Fine-tune AI models with real Thai labor data + Backend API
+- **Current:** Prototyping interactive demo (React app in `/app`, `presentation.html`)
+
+## 📂 Project Structure
+
+- `/app` – React/Vite frontend application
+- `/docs/business/` – Business models, pitch decks, financial projections
+- `/docs/research/` – Market analysis, competitor research, labor statistics
+- `/docs/design/` – UX/UI wireframes, service blueprints
+- `/AI_CONTEXT.md` – This file (Single Source of Truth for AI)
+- `/.agents/workflows/` – AI automation workflows
 
 ---
 
-_Note to developers: If you change the project goals, please update this file, commit, and push so other AIs on your team learn the new context instantly._
+_Last updated: 2026-03-07 by Tech Lead. If goals change, update this file, commit, and push._
